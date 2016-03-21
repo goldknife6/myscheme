@@ -24,6 +24,6 @@ int main(int argc,char *argv[])
 
 	Lexer lexer(ifs);
 
-	int a = lexer.getToken();
-	std::cout<<a;
+	Lexer::TokenType a = lexer.getToken();
+	Lexer::printToken(a);
 }

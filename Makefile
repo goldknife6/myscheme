@@ -9,7 +9,7 @@ INCLUDE = include
 CFLAGS = -I $(INCLUDE) -std=c++11
 TARGET = myscheme
 OBJDIR = obj
-OBJ = $(OBJDIR)/myscheme.o $(OBJDIR)/lexer.o 
+OBJ = $(OBJDIR)/myscheme.o $(OBJDIR)/lexer.o $(OBJDIR)/chartype.o
 
 
 $(TARGET):$(OBJ) $(INCLUDE)/lexer.h myscheme.cpp
@@ -20,6 +20,10 @@ $(OBJDIR)/myscheme.o:$(INCLUDE)/lexer.h myscheme.cpp
 
 $(OBJDIR)/lexer.o:$(INCLUDE)/lexer.h lexer/lexer.cpp
 	$(CC) $(CFLAGS) -c lexer/lexer.cpp -o $@
+
+$(OBJDIR)/chartype.o:util/chartype.cpp
+	$(CC) $(CFLAGS) -c util/chartype.cpp -o $@
+
 
 clean:
 	rm -rf $(OBJDIR)/*.o

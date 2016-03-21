@@ -9,12 +9,12 @@ public:
 		/*keyword*/
 		LAMBDA,IF,SET,BEGIN,COND,AND,OR,CASE,LET,DELAY,
 		/* special symbols */
-		LEFTPAREN,RIGHTPAREN,APOST/*'*/
+		LEFTPAREN,RIGHTPAREN,APOST/*'*/,DOT
 		
 	} TokenType;
 
 	typedef enum {
-		START,END,
+		START,DONE,ERROR,
 		INID,INNUM,INBOOL,INSTRING,INCOMMENT
 	} StateType;
 
@@ -24,9 +24,19 @@ public:
 	
 	TokenType getToken(void);
 
+	static void printToken(TokenType);
+
 private:
 	std::istream &istr;
 	char tokenBuffer[MAXTOKEN];
+
+	char getChar() {
+		return istr.get();
+	}
+	
+	void ungetChar() {
+		istr.unget();
+	}
 };
 
 

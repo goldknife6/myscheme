@@ -3,7 +3,7 @@ A Scheme Interpreter Using C++
 
 词法：
 
-`token` 			——> `identifer` | `number` | `boolean` | `string`
+`token` 			——> `identifer` | `number` | `boolean` | `string` | `(` | `)` | `.`
 
 `identifer`		——> `inital` `subsequent*`
 
@@ -13,7 +13,7 @@ A Scheme Interpreter Using C++
 
 `specialinital` 	——> `!` | `$` | `&` | `*` | `/` | `:` | `<` | `=` | `>` | `?` | `^` | `_`
 
-`subsequent`		——> `inital` | `number`
+`subsequent`		——> `inital` | `digit`
 
 `number`			——> `digit` `digit*`
 
