@@ -6,6 +6,7 @@ Lexer::TokenType Lexer::getToken(void)
 	TokenType currentToken;
 	StateType currentState = START;
 	int stringBufIndex = 0;
+	char tokenBuffer[MAXTOKEN];
 
 	while (currentState != DONE) {
 		char currentChar = getChar();
@@ -16,7 +17,20 @@ Lexer::TokenType Lexer::getToken(void)
 			if (isInital(currentChar)) {
 				currentState = INID;
 			} else if (isDigit(currentChar)) {
-				currentState = INNUM;
+				currentState = INNUM2;
+			} else if (isSign(currentChar)) {
+				char c = getChar();
+				if (isDigit(c)) {
+					currentState = INNUM1;
+				} else {
+					currentState = DONE;
+					if (isDelimiter(c)) {
+						currentToken = IDENTIFIER;
+					} else {
+						currentToken = ERROR;
+					}
+				}
+				ungetChar();
 			} else if (currentChar == '#') {
 				flage = false;
 				currentState = INBOOL;
@@ -26,10 +40,8 @@ Lexer::TokenType Lexer::getToken(void)
 			} else if (currentChar == ';') {
 				flage = false;
 				currentState = INCOMMENT;
-			} else if ((currentChar == ' ') || 
-						(currentChar == '\t') || 
-						(currentChar == '\n')) {
-           		flage = false;
+			} else if (isWhiteSpace(currentChar)) {
+           			flage = false;
 			} else {
 					currentState = DONE;
 					switch (currentChar) {
@@ -42,8 +54,12 @@ Lexer::TokenType Lexer::getToken(void)
 					case '.':
 						currentToken = DOT;
 						break;
+					case EOF:
+						flage = false;
+						currentToken = ENDFILE;
+						break;
 					default:
-						currentState = ERROR;
+						currentToken = ERROR;
 					}	
 			}
 			break;
@@ -55,16 +71,48 @@ Lexer::TokenType Lexer::getToken(void)
 				flage = false;
 			}
 			break;
-		case INNUM:
+		case INNUM1:
+			if (!isDigit(currentChar)) {
+				currentState = DONE;
+				currentToken = ERROR;
+				ungetChar();
+				flage = false;
+			} else {
+				currentState = INNUM2;
+			}
+			break;
+		case INNUM2:
+			if (!isDigit(currentChar)) {
+				currentState = DONE;
+				currentToken = NUMBER;
+				ungetChar();
+				flage = false;
+			}
 			break;
 		case INBOOL:
+			currentState = DONE;
+			if (isBoolean(currentChar)) {
+				currentToken = ERROR;
+			} else {
+				currentToken = BOOLEAN;
+			}
 			break;
 		case INSTRING:
+			if (currentChar == '"' || 
+				currentChar == '\\') {
+				flage = false;
+				currentState = DONE;
+				currentToken = STRING;			
+			}
 			break;
 		case INCOMMENT:
+			flage = false;
+			if (currentChar == '\n') {
+				currentState = START;
+			}
 			break;
 		default:
-			std::cout<<"lexer error\n";
+			std::cout<<"lexer error\n";while(1);
 		}
 		
 		if (flage && stringBufIndex < MAXTOKEN) {
@@ -81,11 +129,12 @@ Lexer::TokenType Lexer::getToken(void)
 	if (currentToken == ID)
 		currentToken = reservedLookup(tokenString);	
 */
-
+	tokenString = std::string(tokenBuffer);
+	printToken(currentToken,tokenString);
 	return currentToken;
 }
 
-void Lexer::printToken(TokenType token)
+void Lexer::printToken(TokenType token,std::string s)
 {
 	using namespace std;
 
@@ -144,6 +193,15 @@ void Lexer::printToken(TokenType token)
 	case DOT:
 		cout<<"DOT";
 		break;
+	case ENDFILE:
+		cout<<"ENDFILE";
+		break;
+	case QUOTE:
+		cout<<"QUOTE";
+		break;
+	case ERROR:
+		cout<<"ERROR";
+		break;
 	}
-	cout<<endl;
+	cout<<"\t"<<s<<endl;
 }

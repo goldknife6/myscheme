@@ -3,28 +3,36 @@ A Scheme Interpreter Using C++
 
 词法：
 
-`token` 			——> `identifer` | `number` | `boolean` | `string` | `(` | `)` | `.`
+`token` 		——> `identifer` | `number` | `boolean` | `string` | `(` | `)` | `.`
 
-`identifer`		——> `inital` `subsequent*`
+`identifer`		——> `inital` `subsequent*` | `peculiaridentifer`
 
-`inital` 			——> `letter` | `specialinital`
+`delimiter`		——> `space` | `newline` | `(` | `)` | `"` | `;`
 
-`letter` 			——> `[a-zA-Z]`
+`peculiaridentifer`	——> `+` | `-`
+
+`inital` 		——> `letter` | `specialinital`
+
+`letter` 		——> `[a-zA-Z]`
 
 `specialinital` 	——> `!` | `$` | `&` | `*` | `/` | `:` | `<` | `=` | `>` | `?` | `^` | `_`
 
-`subsequent`		——> `inital` | `digit`
+`subsequent`		——> `inital` | `digit` | `specialsubsequent`
 
-`number`			——> `digit` `digit*`
+`specialsubsequent`	——> `+` | `-` | `.`
 
-`digit` 			——> `[0-9]`
+`number`		——> `[sign]` `digit` `digit*`
 
-`boolean`			——> `#t`|`#f`
+`sign`			——> `+` | `-`
 
-`string` 			——> `" stringelement* "`
+`digit` 		——> `[0-9]`
+
+`boolean`		——> `#t`|`#f`
+
+`string` 		——> `" stringelement* "`
 
 `stringelement` 	——> `any other character except " and \\`
 
 `comment` 		——> `; all subsquent characters up to line break`
 
-`keyword`   ——> `lambda` | `if` | `set!` | `begin` | `cond` | `and` | `or` | `case` | `let` | `delay`
+`keyword`   		——> `quote` | `lambda` | `if` | `set!` | `begin` | `cond` | `and` | `or` | `case` | `let` | `delay`

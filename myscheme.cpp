@@ -24,6 +24,8 @@ int main(int argc,char *argv[])
 
 	Lexer lexer(ifs);
 
-	Lexer::TokenType a = lexer.getToken();
-	Lexer::printToken(a);
+	Lexer::TokenType a ;
+	while(a != Lexer::TokenType::ENDFILE) {
+		a = lexer.getToken();
+	}
 }
