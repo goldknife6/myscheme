@@ -3,30 +3,27 @@ A Scheme Interpreter Using C++
 
 词法：
 
-`token` 			——> `identifer | number | boolean | string`
+`token` 			——> `identifer` | `number` | `boolean` | `string`
 
-`identifer`		——> `inital subsequent*`
+`identifer`		——> `inital` `subsequent*`
 
-`inital` 			——> `letter | specialinital`
+`inital` 			——> `letter` | `specialinital`
 
 `letter` 			——> `[a-zA-Z]`
 
-`specialinital` 	——> `! | $ | & | * | / | : | < | = | > | ? | ^ | _`
+`specialinital` 	——> `!` | `$` | `&` | `*` | `/` | `:` | `<` | `=` | `>` | `?` | `^` | `_`
 
-`subsequent`		——> `inital | number`
+`subsequent`		——> `inital` | `number`
 
-`number`			——> `digit digit*`
+`number`			——> `digit` `digit*`
 
 `digit` 			——> `[0-9]`
 
-`boolean`			——> `#t|#f`
+`boolean`			——> `#t`|`#f`
 
 `string` 			——> `" stringelement* "`
 
 `stringelement` 	——> `any other character except " and \\`
 
 `comment` 		——> `; all subsquent characters up to line break`
-
-`what?`
-
 
