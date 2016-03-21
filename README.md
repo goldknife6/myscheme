@@ -6,5 +6,7 @@ A Scheme Interpreter Using C++
 **token** ——> **identifer | number | boolean | string**
 
 **letter** ——> **[a-zA-Z]**
+
 **digit** ——> **[0-9]**
+
 **boolean** ——> **#t|#f**
