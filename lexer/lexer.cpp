@@ -1,6 +1,8 @@
 #include <lexer.h>
 
-Lexer::Lexer(std::istream &is)
+
+Lexer::TokenType Lexer::getToken(void)
 {
+
 
 }

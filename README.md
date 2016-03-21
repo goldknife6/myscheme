@@ -10,3 +10,7 @@ A Scheme Interpreter Using C++
 **digit** ——> **[0-9]**
 
 **boolean** ——> **#t|#f**
+
+**string** ——> **"stringelement*"**
+
+**stringelement** ——> **any other character except " and \\**

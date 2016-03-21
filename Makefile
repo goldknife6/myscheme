@@ -6,7 +6,7 @@
 
 CC = g++
 INCLUDE = include
-CFLAGS = -I $(INCLUDE)
+CFLAGS = -I $(INCLUDE) -std=c++11
 TARGET = myscheme
 OBJDIR = obj
 OBJ = $(OBJDIR)/myscheme.o $(OBJDIR)/lexer.o 
