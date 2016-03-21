@@ -11,6 +11,6 @@ A Scheme Interpreter Using C++
 
 **boolean** ——> **#t|#f**
 
-**string** ——> **"stringelement*"**
+**string** ——> **" stringelement* "**
 
 **stringelement** ——> **any other character except " and \\**
