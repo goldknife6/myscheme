@@ -5,11 +5,17 @@
 class Lexer {
 public:
 	typedef enum {
-		IDENTIFIER,BOOLEAN,NUMBER,STRING
+		IDENTIFIER,BOOLEAN,NUMBER,STRING,
+		/*keyword*/
+		LAMBDA,IF,SET,BEGIN,COND,AND,OR,CASE,LET,DELAY,
+		/* special symbols */
+		LEFTPAREN,RIGHTPAREN,APOST/*'*/
+		
 	} TokenType;
 
 	typedef enum {
-		START,END
+		START,END,
+		INID,INNUM,INBOOL,INSTRING,INCOMMENT
 	} StateType;
 
 	static const int MAXTOKEN = 48;
@@ -21,7 +27,6 @@ public:
 private:
 	std::istream &istr;
 	char tokenBuffer[MAXTOKEN];
-	
 };
 
 
