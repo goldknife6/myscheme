@@ -5,7 +5,17 @@ A Scheme Interpreter Using C++
 
 **token** 			——> **identifer | number | boolean | string**
 
+**identifer**		——> **inital subsequent\***
+
+**inital** 			——> **letter | specialinital**
+
 **letter** 			——> **[a-zA-Z]**
+
+**specialinital** 	——> **! | $ | & | * | / | : | < | = | > | ? | ^ | _**
+
+**subsequent**		——> **inital | number**
+
+**number**			——> **digit digit\***
 
 **digit** 			——> **[0-9]**
 
@@ -16,3 +26,6 @@ A Scheme Interpreter Using C++
 **stringelement** 	——> **any other character except " and \\**
 
 **comment** 		——> **; all subsquent characters up to line break**
+
+
+
