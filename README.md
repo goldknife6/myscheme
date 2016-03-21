@@ -27,3 +27,4 @@ A Scheme Interpreter Using C++
 
 `comment` 		——> `; all subsquent characters up to line break`
 
+`keyword`   ——> `lambda` | `if` | `set!` | `begin` | `cond` | `and` | `or` | `case` | `let` | `delay`
