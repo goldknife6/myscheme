@@ -5,7 +5,7 @@ A Scheme Interpreter Using C++
 
 **token** 			——> **identifer | number | boolean | string**
 
-**identifer**		——> **inital subsequent\***
+**identifer**		——> **inital subsequent***
 
 **inital** 			——> **letter | specialinital**
 
@@ -15,7 +15,7 @@ A Scheme Interpreter Using C++
 
 **subsequent**		——> **inital | number**
 
-**number**			——> **digit digit\***
+**number**			——> **digit digit***
 
 **digit** 			——> **[0-9]**
 
