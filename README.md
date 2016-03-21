@@ -3,14 +3,16 @@ A Scheme Interpreter Using C++
 
 词法：
 
-**token** ——> **identifer | number | boolean | string**
+**token** 			——> **identifer | number | boolean | string**
 
-**letter** ——> **[a-zA-Z]**
+**letter** 			——> **[a-zA-Z]**
 
-**digit** ——> **[0-9]**
+**digit** 			——> **[0-9]**
 
-**boolean** ——> **#t|#f**
+**boolean**			——> **#t|#f**
 
-**string** ——> **" stringelement* "**
+**string** 			——> **" stringelement* "**
 
-**stringelement** ——> **any other character except " and \\**
+**stringelement** 	——> **any other character except " and \\**
+
+**comment** 		——> **; all subsquent characters up to line break**
