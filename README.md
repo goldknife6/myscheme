@@ -3,8 +3,8 @@ A Scheme Interpreter Using C++
 
 词法：
 
-**token ——> identifer | number | boolean | string**
+**token** ——> **identifer | number | boolean | string**
 
-<letter> ——> [a-zA-Z]
-<digit> ——> [0-9]
-<boolean> ——> #t|#f
+**letter** ——> **[a-zA-Z]**
+**digit** ——> **[0-9]**
+**boolean** ——> **#t|#f**
