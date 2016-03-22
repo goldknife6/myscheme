@@ -22,6 +22,17 @@ A Scheme Interpreter Using C++
 `keyword`   		——> `quote` | `lambda` | `if` | `set!` | `begin` | `cond` | `and` | `or` | `case` | `let` | `delay`
 
 ###文法规则：
+`Program`		——> `CommandOrDefinition*`<br>
+`CommandOrDefinition`   ——> `Command`<br>
+	　　　　　| `Definition`<br>
+	　　　　　| `(begin CommandOrDefinition+)`<br>
+
+`Definition`		——> `(define Variable Expression)`<br>
+	　　　　　| `(define (Variable DefFormals) Body)`<br>
+
+`DefFormals` 		——> `Variable*`<br>
+	　　　　　| `Variable* . Variable`<br>
+	　　　　　
  `Expression` 		——> `Variable`<br>
 	　　　　　| `Literal`<br>
 	　　　　　| `ProcedureCall`<br>
@@ -46,13 +57,4 @@ A Scheme Interpreter Using C++
 `Test`			——> `Expression`<br>
 `Consqeuence`		——> `Expression`<br>
 `Alternate`		——> `Expression` | `Empty`<br>
-`Program`		——> `CommandOrDefinition*`<br>
-`CommandOrDefinition`   ——> `Command`<br>
-	　　　　　| `Definition`<br>
-	　　　　　| `(begin CommandOrDefinition+)`<br>
 
-`Definition`		——> `(define Variable Expression)`<br>
-	　　　　　| `(define (Variable DefFormals) Body)`<br>
-
-`DefFormals` 		——> `Variable*`<br>
-	　　　　　| `Variable* . Variable`<br>
