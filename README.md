@@ -40,7 +40,7 @@ A Scheme Interpreter Using C++
 
 ###文法规则：
 `Expression` 		——> `Variable`
-        <br>>	| `Literal`
+        <br> >>	| `Literal`
         <br>	| `ProcedureCall`
         <br>	| `LambdaExpression`
         <br>	| `Conditional`
