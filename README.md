@@ -3,44 +3,27 @@ A Scheme Interpreter Using C++
 
 ###词法规则：
 
-`Token` 		——> `Identifer` | `Number` | `Boolean` | `String` | `(` | `)` | `.`
-
-`Identifer`		——> `Inital` `Subsequent*` | `PeculiarIdentifer`
-
-`Delimiter`		——> `Space` | `Newline` | `(` | `)` | `"` | `;`
-
-`PeculiarIdentifer`	——> `+` | `-`
-
-`Inital` 		——> `Letter` | `SpecialInital`
-
-`Letter` 		——> `[a-zA-Z]`
-
-`SpecialInital` 	——> `!` | `$` | `&` | `*` | `/` | `:` | `<` | `=` | `>` | `?` | `^` | `_`
-
-`Subsequent`		——> `Inital` | `Digit` | `SpecialSubsequent`
-
-`SpecialSubsequent`	——> `+` | `-` | `.`
-
-`Number`		——> `[Sign]` `Digit` `Digit*`
-
-`Sign`			——> `+` | `-`
-
-`Digit` 		——> `[0-9]`
-
-`Boolean`		——> `#t`|`#f`
-
-`String` 		——> `" StringElement* "`
-
-`StringElement` 	——> `any other character except " and \\`
-
-`Comment` 		——> `; all subsquent characters up to line break`
-
+`Token`	　　　　　	　　　　　	　——> `Identifer` | `Number` | `Boolean` | `String` | `(` | `)` | `.`<br>
+`Identifer`	　　　　　	　　　　　——> `Inital` `Subsequent*` | `PeculiarIdentifer`<br>
+`Delimiter`			　　　　　——> `Space` | `Newline` | `(` | `)` | `"` | `;`<br>
+`PeculiarIdentifer`		　——> `+` | `-`<br>
+`Inital` 			　　　　　——> `Letter` | `SpecialInital`<br>
+`Letter` 			　　　　　——> `[a-zA-Z]`<br>
+`SpecialInital` 	——> `!` | `$` | `&` | `*` | `/` | `:` | `<` | `=` | `>` | `?` | `^` | `_`<br>
+`Subsequent`		——> `Inital` | `Digit` | `SpecialSubsequent`<br>
+`SpecialSubsequent`	——> `+` | `-` | `.`<br>
+`Number`		——> `[Sign]` `Digit` `Digit*`<br>
+`Sign`			——> `+` | `-`<br>
+`Digit` 		——> `[0-9]`<br>
+`Boolean`		——> `#t`|`#f`<br>
+`String` 		——> `" StringElement* "`<br>
+`StringElement` 	——> `any other character except " and \\`<br>
+`Comment` 		——> `; all subsquent characters up to line break`<br>
 `keyword`   		——> `quote` | `lambda` | `if` | `set!` | `begin` | `cond` | `and` | `or` | `case` | `let` | `delay`
-
 
 ###文法规则：
  `Expression` 		——> `Variable`<br>
-	　　　　　|`Literal`<br>
+	　　　　　| `Literal`<br>
 	　　　　　| `ProcedureCall`<br>
 	　　　　　| `LambdaExpression`<br>
 	　　　　　| `Conditional`<br>
@@ -56,32 +39,20 @@ A Scheme Interpreter Using C++
 	　　　　　| `Variable`<br>
 	　　　　　| `(Variable+ . Variable)`<br>
 
-`Body`			——> `Definition*` `Sequence`
+`Body`			——> `Definition*` `Sequence`<br>
+`Sequence`		——> `Command*` `Expression`<br>
+`Command`		——> `Expression`<br>
+`Conditional`		——> `(if Test Consqeuence Alternate)`<br>
+`Test`			——> `Expression`<br>
+`Consqeuence`		——> `Expression`<br>
+`Alternate`		——> `Expression` | `Empty`<br>
+`Program`		——> `CommandOrDefinition*`<br>
+`CommandOrDefinition`   ——> `Command`<br>
+	　　　　　| `Definition`<br>
+	　　　　　| `(begin CommandOrDefinition+)`<br>
 
-`Sequence`		——> `Command*` `Expression`
+`Definition`		——> `(define Variable Expression)`<br>
+	　　　　　| `(define (Variable DefFormals) Body)`<br>
 
-`Command`		——> `Expression`
-
-`Conditional`		——> `(if Test Consqeuence Alternate)`
-
-`Test`			——> `Expression`
-
-`Consqeuence`		——> `Expression`
-
-`Alternate`		——> `Expression` | `Empty`
-
-`Program`		——> `CommandOrDefinition*`
-
-`CommandOrDefinition`   ——> `Command`
-
-	| `Definition`
-
-	| `(begin CommandOrDefinition+)`
-
-`Definition`		——> `(define Variable Expression)`
-
-	| `(define (Variable DefFormals) Body)`
-
-`DefFormals` 		——> `Variable*`
-
-	| `Variable* . Variable`
+`DefFormals` 		——> `Variable*`<br>
+	　　　　　| `Variable* . Variable`<br>
