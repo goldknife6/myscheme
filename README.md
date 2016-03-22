@@ -39,30 +39,22 @@ A Scheme Interpreter Using C++
 
 
 ###文法规则：
-`Expression` 		——> `Variable`
-<br>	| `Literal`
+ `Expression` 		——> `Variable`<br>
+	　　　　　|`Literal`<br>
+	　　　　　| `ProcedureCall`<br>
+	　　　　　| `LambdaExpression`<br>
+	　　　　　| `Conditional`<br>
+	　　　　　| `Assignment`<br>
 
-	| `ProcedureCall`
-
-	| `LambdaExpression`
-
-	| `Conditional`
-
-	| `Assignment`
-
-`Literal` 		——> `Self-evaluating` | `Quotation`
-
-`Self-evaluating`	——> `Number` | `Boolean` | `String`
-
-`ProcedureCall`		——> `(Operator Operand*)`
-
-`Operator`		——> `Expression`
-
-`Operand`		——> `Expression`
-
-`LambdaExpression`     ——> `(lambda Formals Body)`
-
-`Formals`		——> `(Variable*)` | `Variable` | `(Variable+ . Variable)`
+`Literal` 		——> `Self-evaluating` | `Quotation`<br>
+`Self-evaluating`	——> `Number` | `Boolean` | `String`<br>
+`ProcedureCall`		——> `(Operator Operand*)`<br>
+`Operator`		——> `Expression`<br>
+`Operand`		——> `Expression`<br>
+`LambdaExpression`     ——> `(lambda Formals Body)`<br>
+`Formals`		——> `(Variable*)` <br>
+	　　　　　| `Variable`<br>
+	　　　　　| `(Variable+ . Variable)`<br>
 
 `Body`			——> `Definition*` `Sequence`
 
