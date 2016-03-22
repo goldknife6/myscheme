@@ -3,12 +3,12 @@ A Scheme Interpreter Using C++
 
 ###词法规则：
 
-`Token`	　　　　　	　　　　　	　——> `Identifer` | `Number` | `Boolean` | `String` | `(` | `)` | `.`<br>
-`Identifer`	　　　　　	　　　　　——> `Inital` `Subsequent*` | `PeculiarIdentifer`<br>
-`Delimiter`			　　　　　——> `Space` | `Newline` | `(` | `)` | `"` | `;`<br>
-`PeculiarIdentifer`		　——> `+` | `-`<br>
-`Inital` 			　　　　　——> `Letter` | `SpecialInital`<br>
-`Letter` 			　　　　　——> `[a-zA-Z]`<br>
+`Token`	——> `Identifer` | `Number` | `Boolean` | `String` | `(` | `)` | `.`<br>
+`Identifer`	——> `Inital` `Subsequent*` | `PeculiarIdentifer`<br>
+`Delimiter`	　——> `Space` | `Newline` | `(` | `)` | `"` | `;`<br>
+`PeculiarIdentifer`	　——> `+` | `-`<br>
+`Inital` 	　——> `Letter` | `SpecialInital`<br>
+`Letter` 	　——> `[a-zA-Z]`<br>
 `SpecialInital` 	——> `!` | `$` | `&` | `*` | `/` | `:` | `<` | `=` | `>` | `?` | `^` | `_`<br>
 `Subsequent`		——> `Inital` | `Digit` | `SpecialSubsequent`<br>
 `SpecialSubsequent`	——> `+` | `-` | `.`<br>
@@ -20,6 +20,7 @@ A Scheme Interpreter Using C++
 `StringElement` 	——> `any other character except " and \\`<br>
 `Comment` 		——> `; all subsquent characters up to line break`<br>
 `keyword`   		——> `quote` | `lambda` | `if` | `set!` | `begin` | `cond` | `and` | `or` | `case` | `let` | `delay`
+`Variable`		——> `any Identifer that is not keyword`
 
 ###文法规则：
  `Expression` 		——> `Variable`<br>
