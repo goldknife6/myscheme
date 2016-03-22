@@ -40,6 +40,10 @@ Lexer::TokenType Lexer::getToken(void)
 			} else if (currentChar == ';') {
 				flage = false;
 				currentState = INCOMMENT;
+			} else if (currentChar == '\'') {
+				flage = false;
+				currentState = DONE;
+				currentToken = QUOTE;
 			} else if (isWhiteSpace(currentChar)) {
            			flage = false;
 			} else {
@@ -91,7 +95,7 @@ Lexer::TokenType Lexer::getToken(void)
 			break;
 		case INBOOL:
 			currentState = DONE;
-			if (isBoolean(currentChar)) {
+			if (!isBoolean(currentChar)) {
 				currentToken = ERROR;
 			} else {
 				currentToken = BOOLEAN;
@@ -125,12 +129,15 @@ Lexer::TokenType Lexer::getToken(void)
 	}
 
 	tokenBuffer[stringBufIndex] = '\0';
-/*
-	if (currentToken == ID)
-		currentToken = reservedLookup(tokenString);	
-*/
+
 	tokenString = std::string(tokenBuffer);
+
+	if (currentToken == IDENTIFIER)
+		currentToken = reservedLookup(tokenString);	
+
+
 	printToken(currentToken,tokenString);
+
 	return currentToken;
 }
 
@@ -201,6 +208,12 @@ void Lexer::printToken(TokenType token,std::string s)
 		break;
 	case ERROR:
 		cout<<"ERROR";
+		break;
+	case DEFINE:
+		cout<<"DEFINE";
+		break;
+	case ELSE:
+		cout<<"ELSE";
 		break;
 	}
 	cout<<"\t"<<s<<endl;
