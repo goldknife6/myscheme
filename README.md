@@ -33,7 +33,7 @@ A Scheme Interpreter Using C++
 `DefFormals` 		——> `Variable*`<br>
 	　　　　　| `Variable* . Variable`<br>
 	　　　　　
- `Expression` 		——> `Variable`<br>
+`Expression` 		——> `Variable`<br>
 	　　　　　| `Literal`<br>
 	　　　　　| `ProcedureCall`<br>
 	　　　　　| `LambdaExpression`<br>
