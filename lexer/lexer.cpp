@@ -107,6 +107,10 @@ Lexer::TokenType Lexer::getToken(void)
 				flage = false;
 				currentState = DONE;
 				currentToken = STRING;			
+			} else if (currentChar == EOF) {
+				flage = false;
+				currentState = DONE;
+				currentToken = ERROR;			
 			}
 			break;
 		case INCOMMENT:
@@ -121,9 +125,8 @@ Lexer::TokenType Lexer::getToken(void)
 		
 		if (flage && stringBufIndex < MAXTOKEN) {
 			tokenBuffer[stringBufIndex++] = currentChar;
-		} else {
-			/*
-			*/
+		} else if (stringBufIndex >= MAXTOKEN) {
+			std::cout<<"MAXTOKEN exceed!\n";while(1);
 		}
 
 	}
