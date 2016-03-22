@@ -3,71 +3,94 @@ A Scheme Interpreter Using C++
 
 ###词法规则：
 
-`token` 		——> `identifer` | `number` | `boolean` | `string` | `(` | `)` | `.`
+`Token` 		——> `Identifer` | `Number` | `Boolean` | `String` | `(` | `)` | `.`
 
-`identifer`		——> `inital` `subsequent*` | `peculiaridentifer`
+`Identifer`		——> `Inital` `Subsequent*` | `PeculiarIdentifer`
 
-`delimiter`		——> `space` | `newline` | `(` | `)` | `"` | `;`
+`Delimiter`		——> `Space` | `Newline` | `(` | `)` | `"` | `;`
 
-`peculiaridentifer`	——> `+` | `-`
+`PeculiarIdentifer`	——> `+` | `-`
 
-`inital` 		——> `letter` | `specialinital`
+`Inital` 		——> `Letter` | `SpecialInital`
 
-`letter` 		——> `[a-zA-Z]`
+`Letter` 		——> `[a-zA-Z]`
 
-`specialinital` 	——> `!` | `$` | `&` | `*` | `/` | `:` | `<` | `=` | `>` | `?` | `^` | `_`
+`SpecialInital` 	——> `!` | `$` | `&` | `*` | `/` | `:` | `<` | `=` | `>` | `?` | `^` | `_`
 
-`subsequent`		——> `inital` | `digit` | `specialsubsequent`
+`Subsequent`		——> `Inital` | `Digit` | `SpecialSubsequent`
 
-`specialsubsequent`	——> `+` | `-` | `.`
+`SpecialSubsequent`	——> `+` | `-` | `.`
 
-`number`		——> `[sign]` `digit` `digit*`
+`Number`		——> `[Sign]` `Digit` `Digit*`
 
-`sign`			——> `+` | `-`
+`Sign`			——> `+` | `-`
 
-`digit` 		——> `[0-9]`
+`Digit` 		——> `[0-9]`
 
-`boolean`		——> `#t`|`#f`
+`Boolean`		——> `#t`|`#f`
 
-`string` 		——> `" stringelement* "`
+`String` 		——> `" StringElement* "`
 
-`stringelement` 	——> `any other character except " and \\`
+`StringElement` 	——> `any other character except " and \\`
 
-`comment` 		——> `; all subsquent characters up to line break`
+`Comment` 		——> `; all subsquent characters up to line break`
 
 `keyword`   		——> `quote` | `lambda` | `if` | `set!` | `begin` | `cond` | `and` | `or` | `case` | `let` | `delay`
 
 
 ###文法规则：
-`expression` 		——> `variable`
-	| `literal`
-	| `procedure call`
-	| `lambda expression`
-	| `conditional`
-	| `assignment`
+`Expression` 		——> `Variable`
 
-`literal` 		——> `self-evaluating` | `quotation`
+	| `Literal`
 
-`self-evaluating`	——> `number` | `boolean` | `string`
+	| `ProcedureCall`
 
-`procedure call`	——> `(operator operand*)`
+	| `LambdaExpression`
 
-`operator`		——> `expression`
+	| `Conditional`
 
-`operand`		——> `expression`
+	| `Assignment`
 
-`lambda expression`     ——> `(lambda formals body)`
+`Literal` 		——> `Self-evaluating` | `Quotation`
 
-`formals`		——> `(variable*)` | `variable` | `(variable+ . variable)`
+`Self-evaluating`	——> `Number` | `Boolean` | `String`
 
-`body`			——> `definition*` `sequence`
+`ProcedureCall`		——> `(Operator Operand*)`
 
-`sequence`		——> `command*` `expression`
+`Operator`		——> `Expression`
 
-`conditional`		——> `(if test consqeuence alternate)`
+`Operand`		——> `Expression`
 
-`test`			——> `expression`
+`LambdaExpression`     ——> `(lambda Formals Body)`
 
-`consqeuence`		——> `expression`
+`Formals`		——> `(Variable*)` | `Variable` | `(Variable+ . Variable)`
 
-`alternate`		——> `expression` | `empty`
+`Body`			——> `Definition*` `Sequence`
+
+`Sequence`		——> `Command*` `Expression`
+
+`Command`		——> `Expression`
+
+`Conditional`		——> `(if Test Consqeuence Alternate)`
+
+`Test`			——> `Expression`
+
+`Consqeuence`		——> `Expression`
+
+`Alternate`		——> `Expression` | `Empty`
+
+`Program`		——> `CommandOrDefinition*`
+
+`CommandOrDefinition`   ——> `Command`
+
+	| `Definition`
+
+	| `(begin CommandOrDefinition+)`
+
+`Definition`		——> `(define Variable Expression)`
+
+	| `(define (Variable DefFormals) Body)`
+
+`DefFormals` 		——> `Variable*`
+
+	| `Variable* . Variable`
