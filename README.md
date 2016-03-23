@@ -23,30 +23,6 @@ A Scheme Interpreter Using C++
 `Variable`		——> `any Identifer that is not keyword`
 
 ###文法规则：
- `Expression` 		——> `Variable`<br>
-	　　　　　| `Literal`<br>
-	　　　　　| `ProcedureCall`<br>
-	　　　　　| `LambdaExpression`<br>
-	　　　　　| `Conditional`<br>
-	　　　　　| `Assignment`<br>
-
-`Literal` 		——> `Self-evaluating` | `Quotation`<br>
-`Self-evaluating`	——> `Number` | `Boolean` | `String`<br>
-`ProcedureCall`		——> `(Operator Operand*)`<br>
-`Operator`		——> `Expression`<br>
-`Operand`		——> `Expression`<br>
-`LambdaExpression`     ——> `(lambda Formals Body)`<br>
-`Formals`		——> `(Variable*)` <br>
-	　　　　　| `Variable`<br>
-	　　　　　| `(Variable+ . Variable)`<br>
-
-`Body`			——> `Definition*` `Sequence`<br>
-`Sequence`		——> `Command*` `Expression`<br>
-`Command`		——> `Expression`<br>
-`Conditional`		——> `(if Test Consqeuence Alternate)`<br>
-`Test`			——> `Expression`<br>
-`Consqeuence`		——> `Expression`<br>
-`Alternate`		——> `Expression` | `Empty`<br>
 `Program`		——> `CommandOrDefinition*`<br>
 `CommandOrDefinition`   ——> `Command`<br>
 	　　　　　| `Definition`<br>
@@ -57,3 +33,35 @@ A Scheme Interpreter Using C++
 
 `DefFormals` 		——> `Variable*`<br>
 	　　　　　| `Variable* . Variable`<br>
+
+`Expression` 		——> `Variable`<br>
+	　　　　　| `Literal`<br>
+	　　　　　| `ProcedureCall`<br>
+	　　　　　| `LambdaExpression`<br>
+	　　　　　| `Conditional`<br>
+	　　　　　| `Assignment`<br>
+
+`Literal` 		——> `Self-evaluating` | `Quotation`<br>
+`Self-evaluating`	——> `Number` | `Boolean` | `String`<br>
+
+
+`ProcedureCall`		——> `(Operator Operand*)`<br>
+`Operator`		——> `Expression`<br>
+`Operand`		——> `Expression`<br>
+
+
+`LambdaExpression`     ——> `(lambda Formals Body)`<br>
+`Formals`		——> `(Variable*)` <br>
+	　　　　　| `Variable`<br>
+	　　　　　| `(Variable+ . Variable)`<br>
+
+`Body`			——> `Definition*` `Sequence`<br>
+`Sequence`		——> `Command*` `Expression`<br>
+`Command`		——> `Expression`<br>
+
+
+`Conditional`		——> `(if Test Consqeuence Alternate)`<br>
+`Test`			——> `Expression`<br>
+`Consqeuence`		——> `Expression`<br>
+`Alternate`		——> `Expression` | `Empty`<br>
+
