@@ -24,14 +24,7 @@ int main(int argc,char *argv[])
 
 	Lexer lexer(ifs);
 
-	while(std::cout<<lexer.read());
-	
-
-
-
-/*
 	Parser parser(lexer);
 
 	AstTree &tree = parser.beginParse();
-*/
 }

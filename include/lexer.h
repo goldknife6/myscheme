@@ -131,6 +131,8 @@ private:
 	int lineNumber;
 };
 
+
+
 class Lexer::EOFToken : public Lexer::Token {
 public:
 	EOFToken()
@@ -148,6 +150,8 @@ public:
 	std::string getText() {return "end of file";}
 	int getNumber() {return -1;};
 };
+
+
 
 class Lexer::ERRToken : public Lexer::Token {
 public:
@@ -176,6 +180,9 @@ private:
 	std::string value;
 };
 
+
+
+
 class Lexer::IdToken : public Lexer::Token {
 public:
 	IdToken(int line,std::string s)
@@ -198,12 +205,17 @@ private:
 	std::string str;
 };
 
+
+
+
 class Lexer::BooleanToken : public Lexer::Token {
 public:
 	BooleanToken(int line,std::string s)
 	: Token(line) {
-		std::istringstream istr(s);
-		istr>>value;
+		if(s == "t")
+			value = true;
+		else
+			value = false;
 	}
 
 	bool isIdentifier() {return false;}
@@ -226,6 +238,9 @@ private:
 	bool value;
 };
 
+
+
+
 class Lexer::StringToken : public Lexer::Token {
 public:
 	StringToken(int line,std::string s)
@@ -246,6 +261,10 @@ public:
 private:
 	std::string value;
 };
+
+
+
+
 
 class Lexer::NumberToken : public Lexer::Token {
 public:
@@ -276,20 +295,39 @@ private:
 };
 
 
+
+
+
 class Lexer::KeyToken : public Lexer::Token {
 public:
 	KeyToken(int line,TokenType type)
 	: Token(line),value(type) {
 	}
 
-	bool isIdentifier() {return false;}
-	bool isNumber() {return false;}
-	bool isString() {return false;}
-	bool isBoolean() {return false;}
-	bool isKey() {return true;}
-	bool isSpecial() {return false;}
-	bool isEOF() {return false;}
-	bool isERROR() {return false;}
+	bool isIdentifier() override {
+		return false;
+	}
+	bool isNumber() override {
+		return false;
+	}
+	bool isString() override {
+		return false;
+	}
+	bool isBoolean() override {
+		return false;
+	}
+	bool isKey() override {
+		return true;
+	}
+	bool isSpecial() override {
+		return false;
+	}
+	bool isEOF() override {
+		return false;
+	}
+	bool isERROR() override {
+		return false;
+	}
 
 	
 	std::string getText() {
@@ -329,23 +367,45 @@ private:
 	TokenType value;
 };
 
+
+
+
+
 class Lexer::SpecialToken : public Lexer::Token {
+private:
+	TokenType value;
+
 public:
 	SpecialToken(int line,TokenType type)
 	: Token(line),value(type) {
 	}
 
-	bool isIdentifier() {return false;}
-	bool isNumber() {return false;}
-	bool isString() {return false;}
-	bool isBoolean() {return false;}
-	bool isKey() {return false;}
-	bool isSpecial() {return true;}
-	bool isEOF() {return false;}
-	bool isERROR() {return false;}
+	bool isIdentifier() override {
+		return false;
+	}
+	bool isNumber() override {
+		return false;
+	}
+	bool isString() override {
+		return false;
+	}
+	bool isBoolean() override {
+		return false;
+	}
+	bool isKey() override {
+		return false;
+	}
+	bool isSpecial() override {
+		return true;
+	}
+	bool isEOF() override {
+		return false;
+	}
+	bool isERROR() override {
+		return false;
+	}
 
 	std::string getText() {
-	//		LEFTPAREN,RIGHTPAREN,APOST/*'*/,DOT
 		switch(value) {
 		case LEFTPAREN:
 			return "LEFTPAREN (";
@@ -358,11 +418,12 @@ public:
 		}
 	}
 
+	int getNumber() {
+		return 0;
+	}
 
-	int getNumber() {return 0;}
-
-	TokenType getType() {return value;}
-private:
-	TokenType value;
+	TokenType getType() {
+		return value;
+	}
 };
 #endif/*_LEXER_SCHEMER*/

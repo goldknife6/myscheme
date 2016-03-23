@@ -47,13 +47,13 @@ void Lexer::addToken(int line,TokenType type)
 		t = new IdToken(line,s);
 		break;
 	case BOOLEAN:
-		t = new IdToken(line,s);
+		t = new BooleanToken(line,s);
 		break;
 	case NUMBER:
 		t = new NumberToken(line,s);
 		break;
 	case STRING:
-		t = new IdToken(line,s);
+		t = new StringToken(line,s);
 		break;
 	case LAMBDA:
 	case IF:
@@ -94,6 +94,7 @@ Lexer::TokenType Lexer::getToken(void)
 	StateType currentState = START;
 	int stringBufIndex = 0;
 	char tokenBuffer[MAXTOKEN];
+	tokenBuffer[0] = '\0';
 
 	while (currentState != DONE) {
 		char currentChar = getChar();
@@ -107,11 +108,15 @@ Lexer::TokenType Lexer::getToken(void)
 				currentState = INNUM2;
 			} else if (isSign(currentChar)) {
 				char c = getChar();
-				currentState = DONE;
-				if (isDelimiter(c)) {
-					currentToken = IDENTIFIER;
+				if (isDigit(c)) {
+					currentState = INNUM1;
 				} else {
-					currentToken = ERROR;
+					currentState = DONE;
+					if (isDelimiter(c)) {
+						currentToken = IDENTIFIER;
+					} else {
+						currentToken = ERROR;
+					}
 				}
 				ungetChar();
 			} else if (currentChar == '#') {
@@ -185,12 +190,12 @@ Lexer::TokenType Lexer::getToken(void)
 			}
 			break;
 		case INSTRING:
-			if (currentChar == '"' || 
-				currentChar == '\\') {
+			if (currentChar == '"') {
 				flage = false;
 				currentState = DONE;
 				currentToken = STRING;			
-			} else if (currentChar == EOF) {
+			} else if (currentChar == EOF || 
+				currentChar == '\\') {
 				flage = false;
 				currentState = DONE;
 				currentToken = ERROR;			
