@@ -21,7 +21,7 @@ $(TARGET):$(OBJ) $(INCLUDE)/lexer.h myscheme.cpp
 $(OBJDIR)/myscheme.o:$(INCLUDE)/lexer.h myscheme.cpp
 	$(CC) $(CFLAGS) -c $(TARGET).cpp -o $@
 
-$(OBJDIR)/lexer.o:$(INCLUDE)/lexer.h lexer/lexer.cpp
+$(OBJDIR)/lexer.o:$(INCLUDE)/lexer.h lexer/lexer.cpp $(INCLUDE)/token.h
 	$(CC) $(CFLAGS) -c lexer/lexer.cpp -o $@
 
 $(OBJDIR)/chartype.o:util/chartype.cpp

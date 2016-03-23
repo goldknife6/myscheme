@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include <lexer.h>
-
+#include <parser.h>
 
 int main(int argc,char *argv[])
 {
@@ -23,9 +23,14 @@ int main(int argc,char *argv[])
 	}
 
 	Lexer lexer(ifs);
+	lexer.read();
+	
 
-	Lexer::TokenType a ;
-	while(a != Lexer::TokenType::ENDFILE) {
-		a = lexer.getToken();
-	}
+
+
+/*
+	Parser parser(lexer);
+
+	AstTree &tree = parser.beginParse();
+*/
 }

@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <deque>
+
+#include <token.h>
 
 class Lexer {
 public:
@@ -21,6 +24,13 @@ public:
 		START,DONE,
 		INID,INNUM1,INNUM2,INBOOL,INSTRING,INCOMMENT
 	} StateType;
+	
+	class Token;
+	class IdToken;
+	class StringToken;
+	class NumberToken;
+	class BooleanToken;
+	class EOFToken;
 
 	static const int MAXTOKEN = 48;
 
@@ -42,17 +52,26 @@ public:
 		keyWord["else"] = ELSE;
 	}
 	
-	TokenType getToken(void);
-
 	static void printToken(TokenType,std::string);
 	
 	std::string getString() { return tokenString;}
 
+	Token &peek(int);
+	Token &read();
+
+	
 private:
 	std::istream &istr;
 	std::string tokenString;
 	std::map<std::string,TokenType> keyWord;
+	std::deque<Token*> deque;
+
 	int lineNo = 0;
+	static EOFToken eofToken;
+
+	TokenType getToken(void);
+	void addToken(int,TokenType);
+	bool fullQueue(int);
 
 	char getChar() {
 		char c = istr.get();
@@ -75,8 +94,99 @@ private:
 };
 
 
+class Lexer::Token {
+public:
+	Token(int line) {
+		lineNumber = line;
+	}
 
+	virtual bool isIdentifier() =0;
+	virtual bool isNumber() =0;
+	virtual bool isString() =0;
+	virtual bool isBoolean() =0;
+	virtual std::string getText() =0;
+	virtual int getNumber() =0;
+private:
+	int lineNumber = 0;
+};
 
+class Lexer::EOFToken : public Lexer::Token {
+public:
+	EOFToken()
+	: Token(-1) {
+	}
 
+	bool isIdentifier() {return true;}
+	bool isNumber() {return false;}
+	bool isString() {return false;}
+	bool isBoolean() {return false;}
+	std::string getText() {return str;};
+	int getNumber() {return 0;};
+private:
+	std::string str;
+};
 
+class Lexer::IdToken : public Lexer::Token {
+public:
+	IdToken(int line,std::string)
+	: Token(line) {
+	}
+
+	bool isIdentifier() {return true;}
+	bool isNumber() {return false;}
+	bool isString() {return false;}
+	bool isBoolean() {return false;}
+	std::string getText() {return str;};
+	int getNumber() {return 0;};
+private:
+	std::string str;
+};
+
+class Lexer::BooleanToken : public Lexer::Token {
+public:
+	BooleanToken(int line,std::string)
+	: Token(line) {
+	}
+
+	bool isIdentifier() {return false;}
+	bool isNumber() {return false;}
+	bool isString() {return false;}
+	bool isBoolean() {return true;}
+	std::string getText() {return "";};
+	int getNumber() {return 0;};
+private:
+	bool value;
+};
+
+class Lexer::StringToken : public Lexer::Token {
+public:
+	StringToken(int line,std::string s)
+	: Token(line),value(s) {
+	}
+
+	bool isIdentifier() {return false;}
+	bool isNumber() {return false;}
+	bool isString() {return true;}
+	bool isBoolean() {return false;}
+	std::string getText() {return value;};
+	int getNumber() {return 0;};
+private:
+	std::string value;
+};
+
+class Lexer::NumberToken : public Lexer::Token {
+public:
+	NumberToken(int line,std::string s)
+	: Token(line) {
+	}
+
+	bool isIdentifier() {return false;}
+	bool isNumber() {return true;}
+	bool isString() {return false;}
+	bool isBoolean() {return false;}
+	std::string getText() {return "";};
+	int getNumber() {return value;};
+private:
+	int value;
+};
 #endif/*_LEXER_SCHEMER*/

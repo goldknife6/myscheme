@@ -1,5 +1,63 @@
 #include <lexer.h>
 #include <chartype.h>
+Lexer::EOFToken Lexer::eofToken;
+Lexer::Token &Lexer::peek(int i)
+{
+	if (fullQueue(i))
+		return *deque[i-1];
+	return eofToken;
+}
+
+Lexer::Token &Lexer::read()
+{
+	if (fullQueue(0)) {
+		Token *p = deque.front();
+		deque.pop_front();
+		return *p;
+	}
+	return eofToken;
+}
+
+bool Lexer::fullQueue(int count)
+{
+	auto size = deque.size();
+	if (size >= count)
+		return true;
+	
+	TokenType type;
+	do {
+		type = getToken();	
+		addToken(lineNo,type);
+		size++;
+	} while (type != ENDFILE &&
+			size <= count);
+
+	if (size >= count)
+		return true;
+	else
+		return false;
+}
+
+void Lexer::addToken(int line,TokenType type)
+{
+	Token *t;
+	std::string s = getString();
+	switch (type) {
+	case IDENTIFIER:
+		t = new IdToken(line,s);
+		break;
+	case BOOLEAN:
+		t = new IdToken(line,s);
+		break;
+	case NUMBER:
+		t = new NumberToken(line,s);
+		break;
+	case STRING:
+		t = new IdToken(line,s);
+		break;
+	}
+	deque.push_back(t);
+}
 
 Lexer::TokenType Lexer::getToken(void)
 {
