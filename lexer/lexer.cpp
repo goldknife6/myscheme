@@ -1,11 +1,11 @@
 #include <lexer.h>
 #include <chartype.h>
-Lexer::EOFToken Lexer::eofToken;
+
 Lexer::Token &Lexer::peek(int i)
 {
 	if (fullQueue(i))
 		return *deque[i-1];
-	return eofToken;
+	return *new EOFToken;
 }
 
 Lexer::Token &Lexer::read()
@@ -15,13 +15,13 @@ Lexer::Token &Lexer::read()
 		deque.pop_front();
 		return *p;
 	}
-	return eofToken;
+	return *new EOFToken;
 }
 
 bool Lexer::fullQueue(int count)
 {
 	auto size = deque.size();
-	if (size >= count)
+	if (size > count)
 		return true;
 	
 	TokenType type;
@@ -32,7 +32,7 @@ bool Lexer::fullQueue(int count)
 	} while (type != ENDFILE &&
 			size <= count);
 
-	if (size >= count)
+	if (size > count)
 		return true;
 	else
 		return false;
@@ -55,6 +55,35 @@ void Lexer::addToken(int line,TokenType type)
 	case STRING:
 		t = new IdToken(line,s);
 		break;
+	case LAMBDA:
+	case IF:
+	case SET:
+	case BEGIN:
+	case COND:
+	case AND:
+	case OR:
+	case CASE:
+	case LET:
+	case DELAY:
+	case QUOTE:
+	case DEFINE:
+	case ELSE:
+		t = new KeyToken(line,type);
+		break;
+	case LEFTPAREN:
+	case RIGHTPAREN:
+	case APOST:
+	case DOT:
+		t = new SpecialToken(line,type);
+		break;
+	case ENDFILE:
+		t = new EOFToken();
+		break;
+	case ERROR:
+		t = new ERRToken(line,s);
+		break;
+	default:
+		std::cout<<"lexer error"<<std::endl;while(1);
 	}
 	deque.push_back(t);
 }
@@ -78,15 +107,11 @@ Lexer::TokenType Lexer::getToken(void)
 				currentState = INNUM2;
 			} else if (isSign(currentChar)) {
 				char c = getChar();
-				if (isDigit(c)) {
-					currentState = INNUM1;
+				currentState = DONE;
+				if (isDelimiter(c)) {
+					currentToken = IDENTIFIER;
 				} else {
-					currentState = DONE;
-					if (isDelimiter(c)) {
-						currentToken = IDENTIFIER;
-					} else {
-						currentToken = ERROR;
-					}
+					currentToken = ERROR;
 				}
 				ungetChar();
 			} else if (currentChar == '#') {
@@ -197,85 +222,6 @@ Lexer::TokenType Lexer::getToken(void)
 		currentToken = reservedLookup(tokenString);	
 
 
-	printToken(currentToken,tokenString);
-
 	return currentToken;
 }
 
-void Lexer::printToken(TokenType token,std::string s)
-{
-	using namespace std;
-
-	switch (token) {
-	case IDENTIFIER:
-		cout<<"IDENTIFIER";
-		break;
-	case BOOLEAN:
-		cout<<"BOOLEAN";
-		break;
-	case NUMBER:
-		cout<<"NUMBER";
-		break;
-	case STRING:
-		cout<<"STRING";
-		break;
-	case LAMBDA:
-		cout<<"LAMBDA";
-		break;
-	case IF:
-		cout<<"IF";
-		break;
-	case SET:
-		cout<<"SET";
-		break;
-	case BEGIN:
-		cout<<"BEGIN";
-		break;
-	case COND:
-		cout<<"COND";
-		break;
-	case AND:
-		cout<<"AND";
-		break;
-	case OR:
-		cout<<"OR";
-		break;
-	case CASE:
-		cout<<"CASE";
-		break;
-	case LET:
-		cout<<"LET";
-		break;
-	case DELAY:
-		cout<<"DELAY";
-		break;
-	case LEFTPAREN:
-		cout<<"LEFTPAREN";
-		break;
-	case RIGHTPAREN:
-		cout<<"RIGHTPAREN";
-		break;
-	case APOST:
-		cout<<"APOST";
-		break;
-	case DOT:
-		cout<<"DOT";
-		break;
-	case ENDFILE:
-		cout<<"ENDFILE";
-		break;
-	case QUOTE:
-		cout<<"QUOTE";
-		break;
-	case ERROR:
-		cout<<"ERROR";
-		break;
-	case DEFINE:
-		cout<<"DEFINE";
-		break;
-	case ELSE:
-		cout<<"ELSE";
-		break;
-	}
-	cout<<"\t"<<s<<endl;
-}

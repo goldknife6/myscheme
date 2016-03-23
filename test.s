@@ -1,2 +1,2 @@
-(define (make-semaphore n) ;fss
-#
+(+22 2)
+(+22 2)

@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <deque>
+#include <sstream>
 
 #include <token.h>
 
@@ -30,8 +31,10 @@ public:
 	class StringToken;
 	class NumberToken;
 	class BooleanToken;
+	class KeyToken;
+	class SpecialToken;
 	class EOFToken;
-
+	class ERRToken;
 	static const int MAXTOKEN = 48;
 
 	Lexer(std::istream &is)
@@ -58,7 +61,6 @@ public:
 
 	Token &peek(int);
 	Token &read();
-
 	
 private:
 	std::istream &istr;
@@ -66,8 +68,8 @@ private:
 	std::map<std::string,TokenType> keyWord;
 	std::deque<Token*> deque;
 
-	int lineNo = 0;
-	static EOFToken eofToken;
+	int lineNo = 1;
+	
 
 	TokenType getToken(void);
 	void addToken(int,TokenType);
@@ -104,10 +106,29 @@ public:
 	virtual bool isNumber() =0;
 	virtual bool isString() =0;
 	virtual bool isBoolean() =0;
+	virtual bool isKey() =0;
+	virtual bool isSpecial() =0;
+	virtual	bool isEOF() =0;
+	virtual	bool isERROR() =0;
+
 	virtual std::string getText() =0;
 	virtual int getNumber() =0;
+
+	int getLineNumber() { 
+		return lineNumber; 
+	}
+
+	friend std::ostream& operator<< (std::ostream &os,Token &t)  
+	{  
+		std::string s;
+		os<<t.getText()<<std::endl;
+		if (t.isEOF()) 
+			os.setstate(std::ostream::eofbit);//iostate 
+		return os;  
+	}  
+
 private:
-	int lineNumber = 0;
+	int lineNumber;
 };
 
 class Lexer::EOFToken : public Lexer::Token {
@@ -116,27 +137,62 @@ public:
 	: Token(-1) {
 	}
 
-	bool isIdentifier() {return true;}
+	bool isIdentifier() {return false;}
 	bool isNumber() {return false;}
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
-	std::string getText() {return str;};
-	int getNumber() {return 0;};
+	bool isKey() {return false;}
+	bool isSpecial() {return false;}
+	bool isEOF() {return true;}
+	bool isERROR() {return false;}
+	std::string getText() {return "end of file";}
+	int getNumber() {return -1;};
+};
+
+class Lexer::ERRToken : public Lexer::Token {
+public:
+	ERRToken(int line,std::string s)
+	: Token(line),value(s) {
+	}
+
+	bool isIdentifier() {return false;}
+	bool isNumber() {return false;}
+	bool isString() {return false;}
+	bool isBoolean() {return false;}
+	bool isKey() {return false;}
+	bool isSpecial() {return false;}
+	bool isEOF() {return false;}
+	bool isERROR() {return true;}
+
+
+	std::string getText() {
+		std::ostringstream ost;
+		ost<<getLineNumber();
+		return "error occured at line " + ost.str() + ",  " +value;
+	}
+
+	int getNumber() {return -1;};
 private:
-	std::string str;
+	std::string value;
 };
 
 class Lexer::IdToken : public Lexer::Token {
 public:
-	IdToken(int line,std::string)
-	: Token(line) {
+	IdToken(int line,std::string s)
+	: Token(line),str(s) {
 	}
 
 	bool isIdentifier() {return true;}
 	bool isNumber() {return false;}
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
-	std::string getText() {return str;};
+	bool isKey() {return false;}
+	bool isSpecial() {return false;}
+	bool isEOF() {return false;}
+	bool isERROR() {return false;}
+
+
+	std::string getText() {return "identifier  " + str;}
 	int getNumber() {return 0;};
 private:
 	std::string str;
@@ -144,16 +200,28 @@ private:
 
 class Lexer::BooleanToken : public Lexer::Token {
 public:
-	BooleanToken(int line,std::string)
+	BooleanToken(int line,std::string s)
 	: Token(line) {
+		std::istringstream istr(s);
+		istr>>value;
 	}
 
 	bool isIdentifier() {return false;}
 	bool isNumber() {return false;}
 	bool isString() {return false;}
 	bool isBoolean() {return true;}
-	std::string getText() {return "";};
-	int getNumber() {return 0;};
+	bool isKey() {return false;}
+	bool isSpecial() {return false;}
+	bool isEOF() {return false;}
+	bool isERROR() {return false;}
+
+	std::string getText() {
+		if(value)
+			return "boolean  true";
+		else
+			return "boolean  false";
+	}
+	int getNumber() {return 0;}
 private:
 	bool value;
 };
@@ -168,7 +236,12 @@ public:
 	bool isNumber() {return false;}
 	bool isString() {return true;}
 	bool isBoolean() {return false;}
-	std::string getText() {return value;};
+	bool isKey() {return false;}
+	bool isSpecial() {return false;}
+	bool isEOF() {return false;}
+	bool isERROR() {return false;}
+
+	std::string getText() {return "string  "+value;};
 	int getNumber() {return 0;};
 private:
 	std::string value;
@@ -178,15 +251,118 @@ class Lexer::NumberToken : public Lexer::Token {
 public:
 	NumberToken(int line,std::string s)
 	: Token(line) {
+		std::istringstream istr(s);
+		istr>>value;
 	}
 
 	bool isIdentifier() {return false;}
 	bool isNumber() {return true;}
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
-	std::string getText() {return "";};
-	int getNumber() {return value;};
+	bool isKey() {return false;}
+	bool isSpecial() {return false;}
+	bool isEOF() {return false;}
+	bool isERROR() {return false;}
+
+	std::string getText() {
+		std::ostringstream istr;
+		istr<<value;
+		return "number  "+istr.str();
+	}
+
+	int getNumber() {return value;}
 private:
 	int value;
+};
+
+
+class Lexer::KeyToken : public Lexer::Token {
+public:
+	KeyToken(int line,TokenType type)
+	: Token(line),value(type) {
+	}
+
+	bool isIdentifier() {return false;}
+	bool isNumber() {return false;}
+	bool isString() {return false;}
+	bool isBoolean() {return false;}
+	bool isKey() {return true;}
+	bool isSpecial() {return false;}
+	bool isEOF() {return false;}
+	bool isERROR() {return false;}
+
+	
+	std::string getText() {
+		switch(value) {
+		case LAMBDA:
+			return "keyword  LAMBDA";
+		case IF:
+			return "keyword  IF";
+		case SET:
+			return "keyword  SET";
+		case BEGIN:
+			return "keyword  BEGIN";
+		case COND:
+			return "keyword  COND";
+		case AND:
+			return "keyword  AND";
+		case OR:
+			return "keyword  OR";
+		case CASE:
+			return "keyword  CASE";
+		case LET:
+			return "keyword  LET";
+		case DELAY:
+			return "keyword  DELAY";
+		case QUOTE:
+			return "keyword  QUOTE";
+		case DEFINE:
+			return "keyword  DEFINE";
+		case ELSE:
+			return "keyword  ELSE";
+		}
+	}
+
+	int getNumber() {return 0;};
+	TokenType getType() {return value;};
+private:
+	TokenType value;
+};
+
+class Lexer::SpecialToken : public Lexer::Token {
+public:
+	SpecialToken(int line,TokenType type)
+	: Token(line),value(type) {
+	}
+
+	bool isIdentifier() {return false;}
+	bool isNumber() {return false;}
+	bool isString() {return false;}
+	bool isBoolean() {return false;}
+	bool isKey() {return false;}
+	bool isSpecial() {return true;}
+	bool isEOF() {return false;}
+	bool isERROR() {return false;}
+
+	std::string getText() {
+	//		LEFTPAREN,RIGHTPAREN,APOST/*'*/,DOT
+		switch(value) {
+		case LEFTPAREN:
+			return "LEFTPAREN (";
+		case RIGHTPAREN:
+			return "RIGHTPAREN )";
+		case APOST:
+			return "APOST";
+		case DOT:
+			return "DOT .";
+		}
+	}
+
+
+	int getNumber() {return 0;}
+
+	TokenType getType() {return value;}
+private:
+	TokenType value;
 };
 #endif/*_LEXER_SCHEMER*/

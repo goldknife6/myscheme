@@ -23,7 +23,8 @@ int main(int argc,char *argv[])
 	}
 
 	Lexer lexer(ifs);
-	lexer.read();
+
+	while(std::cout<<lexer.read());
 	
 
 
