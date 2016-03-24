@@ -14,8 +14,9 @@ private:
 	Lexer &lexer;
 	Lexer::Token *token;
 
-	void getToken() {
+	Lexer::Token * getToken() {
 		token = &lexer.read();
+		return token;
 	}
 	Lexer::Token *peek(int i) {
 		return 	&lexer.peek(i);
@@ -31,6 +32,7 @@ private:
 	AstTree *formals();
 	AstTree *body();
 	AstTree *sequence();
+	AstTree *conditional();
 };
 
 

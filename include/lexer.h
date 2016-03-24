@@ -106,7 +106,7 @@ public:
 	virtual bool isNumber() =0;
 	virtual bool isString() =0;
 	virtual bool isBoolean() =0;
-	virtual bool isKey() =0;
+	virtual bool isKey(TokenType) =0;
 	virtual bool isSpecial(TokenType) =0;
 	virtual	bool isEOF() =0;
 	virtual	bool isERROR() =0;
@@ -143,7 +143,7 @@ public:
 	bool isNumber() {return false;}
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
-	bool isKey() {return false;}
+	bool isKey(TokenType type) {return false;}
 	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return true;}
 	bool isERROR() {return false;}
@@ -163,7 +163,7 @@ public:
 	bool isNumber() {return false;}
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
-	bool isKey() {return false;}
+	bool isKey(TokenType type) {return false;}
 	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return false;}
 	bool isERROR() {return true;}
@@ -193,7 +193,7 @@ public:
 	bool isNumber() {return false;}
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
-	bool isKey() {return false;}
+	bool isKey(TokenType type) {return false;}
 	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return false;}
 	bool isERROR() {return false;}
@@ -222,7 +222,7 @@ public:
 	bool isNumber() {return false;}
 	bool isString() {return false;}
 	bool isBoolean() {return true;}
-	bool isKey() {return false;}
+	bool isKey(TokenType type) {return false;}
 	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return false;}
 	bool isERROR() {return false;}
@@ -251,7 +251,7 @@ public:
 	bool isNumber() {return false;}
 	bool isString() {return true;}
 	bool isBoolean() {return false;}
-	bool isKey() {return false;}
+	bool isKey(TokenType type) {return false;}
 	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return false;}
 	bool isERROR() {return false;}
@@ -278,7 +278,7 @@ public:
 	bool isNumber() {return true;}
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
-	bool isKey() {return false;}
+	bool isKey(TokenType type) {return false;}
 	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return false;}
 	bool isERROR() {return false;}
@@ -316,8 +316,8 @@ public:
 	bool isBoolean() override {
 		return false;
 	}
-	bool isKey() override {
-		return true;
+	bool isKey(TokenType type) override {
+		return type == value;
 	}
 	bool isSpecial(TokenType type) override {
 		return false;
@@ -392,7 +392,7 @@ public:
 	bool isBoolean() override {
 		return false;
 	}
-	bool isKey() override {
+	bool isKey(TokenType type) override {
 		return false;
 	}
 	bool isSpecial(TokenType type) override {

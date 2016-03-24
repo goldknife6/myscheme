@@ -3,7 +3,6 @@
 
 AstTree *Parser::beginParse()
 {
-	getToken();
 	return expression();
 }
 
@@ -16,15 +15,20 @@ AstTree *Parser::program()
 AstTree *Parser::expression()
 {
 	AstTree *t = nullptr;
-	if (t = variable()) {
-		return t;
+
+	if (peek(0)->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+		//getToken();
+		if (t = lambdaExpression()) {
+			return t;
+		} else if (t = conditional()) { 
+			return t;
+		} else if (t = procedureCall()) {
+			return t;
+		}
 	} else if (t = literal()) {
 		return t;
-	} else if (t = lambdaExpression()) {
-		return t;
-	} else if (t = procedureCall()) {
-		return t;
-	}
+	} else if (t = variable())
+			return t;
 	
 	return nullptr;
 }
@@ -40,7 +44,7 @@ AstTree *Parser::procedureCall()
 
 		AstTree *p = expression();
 		if (p == nullptr) {
-			std::cout<<"procedureCall error"<<std::endl;	
+			std::cout<<"Ill-formed special form:procedure call"<<std::endl;
 			while(1);
 		}
 		mydeque.push_back(p);
@@ -56,9 +60,9 @@ AstTree *Parser::procedureCall()
 
 AstTree *Parser::variable()
 {
-	if (token->isIdentifier()) {
-		AstTree *p = new IdLiteral(*token);
+	if (peek(0)->isIdentifier()) {
 		getToken();
+		AstTree *p = new IdLiteral(*token);
 		return p;
 	}
 	return nullptr;
@@ -89,9 +93,9 @@ AstTree *Parser::lambdaExpression()
 	Lexer::SpecialToken *tmp;
 	AstTree *p;
 	
-	if (token->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+	if (peek(0)->isSpecial(Lexer::TokenType::LEFTPAREN)) {
 
-		if (!peek(0)->isKey())
+		if (!peek(1)->isKey(Lexer::TokenType::LAMBDA))
 			return nullptr;
 		
 		getToken();getToken();
@@ -106,6 +110,10 @@ AstTree *Parser::lambdaExpression()
 		mydeque.push_back(p);
 
 		getToken();
+		if(!token->isSpecial(Lexer::TokenType::RIGHTPAREN)) {
+			std::cout<<"lambda error"<<token->getText()<<std::endl;	
+		}
+
 		return new Lambda(mydeque);
 	}
 }
@@ -113,16 +121,16 @@ AstTree *Parser::lambdaExpression()
 AstTree *Parser::formals()
 {
 	std::deque<AstTree*> mydeque;
-
-	if (token->isIdentifier()) {
+	if (peek(0)->isIdentifier()) {
 		mydeque.push_back(variable());
 		return new Formals(mydeque);
-	} else if (token->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+	} else if (peek(0)->isSpecial(Lexer::TokenType::LEFTPAREN)) {
 		getToken();
-		while (token->isIdentifier()) {
+		while (peek(0)->isIdentifier()) {
 			mydeque.push_back(variable());	
 		}
-		getToken();
+		if(!getToken()->isSpecial(Lexer::TokenType::RIGHTPAREN))
+			std::cout<<"formals error"<<std::endl;	
 		return new Formals(mydeque);
 	}
 
@@ -133,7 +141,8 @@ AstTree *Parser::formals()
 AstTree *Parser::body()
 {
 	//暂时不支持Definition*
-	return sequence();
+	AstTree *p = sequence();
+	return p;
 }
 
 AstTree *Parser::sequence()
@@ -155,6 +164,43 @@ AstTree *Parser::sequence()
 
 	return new Sequence(mydeque);
 }
+
+
+AstTree *Parser::conditional()
+{
+	std::deque<AstTree*> mydeque;
+	AstTree*p;
+
+	if (token->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+
+		if (!peek(0)->isKey(Lexer::TokenType::IF))
+			return nullptr;
+		
+		getToken();getToken();
+		p = expression();
+		if (p != nullptr)
+			mydeque.push_back(p);
+		else
+			return nullptr;
+		
+		p = expression();
+		if (p != nullptr)
+			mydeque.push_back(p);
+		else
+			return nullptr;
+
+
+		p = expression();
+		if (p != nullptr)
+			mydeque.push_back(p);
+		if(!getToken()->isKey(Lexer::TokenType::RIGHTPAREN))
+			std::cout<<"conditional error"<<std::endl;	
+		
+		return new Conditional(mydeque);
+	}
+	return nullptr;
+}
+
 
 AstTree *Parser::definition()
 {

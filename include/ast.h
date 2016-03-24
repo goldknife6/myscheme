@@ -11,5 +11,6 @@
 #include <ast/formals.h>
 #include <ast/sequence.h>
 #include <ast/body.h>
+#include <ast/conditional.h>
 
 #endif/*_AST_SCHEMER*/

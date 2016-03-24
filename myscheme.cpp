@@ -22,11 +22,14 @@ int main(int argc,char *argv[])
 		exit(1);
 	}
 
-	Lexer lexer(ifs);
+	Lexer lexer(std::cin);
 
 	Parser parser(lexer);
 
-	AstTree *tree;
-	tree = parser.beginParse();
-	std::cout<<tree->toString();
+	AstTree *tree = parser.beginParse();;
+	while(tree) {
+		std::cout<<tree->toString();
+		tree = parser.beginParse();
+	}
+	
 }
