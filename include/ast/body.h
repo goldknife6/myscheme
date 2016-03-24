@@ -1,18 +1,20 @@
-#ifndef _PROCEDURE_SCHEMER
-#define _PROCEDURE_SCHEMER
+#ifndef _BODY_SCHEMER
+#define _BODY_SCHEMER
 
 #include "astlist.h"
+#include "formals.h"
 
-class Procedure : public AstList {
+class Body : public AstList {
 public:
-	Procedure(std::deque<AstTree*> &deque)
+	Body(std::deque<AstTree*> &deque)
 	:AstList(deque) {
 		
 	}
 
+
 	virtual std::string toString() override {
 		std::string s;
-		s += "(proc  ";
+		s += "(Body  ";
 		std::string sep("");
 		AstTree *p;
 		
@@ -21,7 +23,7 @@ public:
 			s += p->toString();
 			sep = "  ";
 		}
-		s += ") ";
+		s += ")\n";
 		return s;
 	}
 };
@@ -29,4 +31,4 @@ public:
 
 
 
-#endif/*_PROCEDURE_SCHEMER*/
+#endif/*_BODY_SCHEMER*/

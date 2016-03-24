@@ -20,9 +20,9 @@ AstTree *Parser::expression()
 		return t;
 	} else if (t = literal()) {
 		return t;
-	} else if (t = procedureCall()) {
-		return t;
 	} else if (t = lambdaExpression()) {
+		return t;
+	} else if (t = procedureCall()) {
 		return t;
 	}
 	
@@ -35,23 +35,21 @@ AstTree *Parser::procedureCall()
 	Lexer::SpecialToken *tmp;
 
 	
-	if (token->isSpecial()) {
-		tmp = dynamic_cast<Lexer::SpecialToken*>(token);
-
-		if (tmp && tmp->getType() != Lexer::TokenType::LEFTPAREN)
-			return nullptr;
-
+	if (token->isSpecial(Lexer::TokenType::LEFTPAREN)) {
 		getToken();
+
 		AstTree *p = expression();
 		if (p == nullptr) {
-			std::cout<<"procedureCall error"<<std::endl;		
+			std::cout<<"procedureCall error"<<std::endl;	
+			while(1);
 		}
 		mydeque.push_back(p);
 
 		while ((p = expression()) != nullptr) {
 			mydeque.push_back(p);
+			//std::cout<<p->toString()<<std::endl;
 		}
-		
+		getToken();
 		return new Procedure(mydeque);
 	}
 }
@@ -87,7 +85,75 @@ AstTree *Parser::literal()
 
 AstTree *Parser::lambdaExpression()
 {
+	std::deque<AstTree*> mydeque;
+	Lexer::SpecialToken *tmp;
+	AstTree *p;
+	
+	if (token->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+
+		if (!peek(0)->isKey())
+			return nullptr;
+		
+		getToken();getToken();
+		p = formals();
+		if (p == nullptr) {
+			std::cout<<"lambdaExpression error"<<std::endl;	
+			while(1);
+		}
+		mydeque.push_back(p);
+
+		p = body();
+		mydeque.push_back(p);
+
+		getToken();
+		return new Lambda(mydeque);
+	}
+}
+
+AstTree *Parser::formals()
+{
+	std::deque<AstTree*> mydeque;
+
+	if (token->isIdentifier()) {
+		mydeque.push_back(variable());
+		return new Formals(mydeque);
+	} else if (token->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+		getToken();
+		while (token->isIdentifier()) {
+			mydeque.push_back(variable());	
+		}
+		getToken();
+		return new Formals(mydeque);
+	}
+
+	//暂时不支持可变参数
 	return nullptr;
+}
+
+AstTree *Parser::body()
+{
+	//暂时不支持Definition*
+	return sequence();
+}
+
+AstTree *Parser::sequence()
+{
+	//暂时不支持Command
+	AstTree *p;
+	std::deque<AstTree*> mydeque;
+
+	p = expression();
+
+	if (p == nullptr)
+		return nullptr;
+
+	mydeque.push_back(p);
+
+	while (p = expression()) {
+		mydeque.push_back(p);	
+	}
+
+	return new Sequence(mydeque);
 }
 
 AstTree *Parser::definition()

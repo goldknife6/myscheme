@@ -28,6 +28,9 @@ private:
 	AstTree *variable();
 	AstTree *literal();
 	AstTree *lambdaExpression();
+	AstTree *formals();
+	AstTree *body();
+	AstTree *sequence();
 };
 
 

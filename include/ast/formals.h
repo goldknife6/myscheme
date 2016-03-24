@@ -1,18 +1,17 @@
-#ifndef _PROCEDURE_SCHEMER
-#define _PROCEDURE_SCHEMER
+#ifndef _FORMALS_SCHEMER
+#define _FORMALS_SCHEMER
 
 #include "astlist.h"
 
-class Procedure : public AstList {
+class Formals : public AstList {
 public:
-	Procedure(std::deque<AstTree*> &deque)
+	Formals(std::deque<AstTree*> &deque)
 	:AstList(deque) {
-		
 	}
 
 	virtual std::string toString() override {
 		std::string s;
-		s += "(proc  ";
+		s += "(formals  ";
 		std::string sep("");
 		AstTree *p;
 		
@@ -29,4 +28,4 @@ public:
 
 
 
-#endif/*_PROCEDURE_SCHEMER*/
+#endif/*_FORMALS_SCHEMER*/

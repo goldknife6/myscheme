@@ -107,7 +107,7 @@ public:
 	virtual bool isString() =0;
 	virtual bool isBoolean() =0;
 	virtual bool isKey() =0;
-	virtual bool isSpecial() =0;
+	virtual bool isSpecial(TokenType) =0;
 	virtual	bool isEOF() =0;
 	virtual	bool isERROR() =0;
 
@@ -144,7 +144,7 @@ public:
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
 	bool isKey() {return false;}
-	bool isSpecial() {return false;}
+	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return true;}
 	bool isERROR() {return false;}
 	std::string getText() {return "end of file";}
@@ -164,7 +164,7 @@ public:
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
 	bool isKey() {return false;}
-	bool isSpecial() {return false;}
+	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return false;}
 	bool isERROR() {return true;}
 
@@ -194,7 +194,7 @@ public:
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
 	bool isKey() {return false;}
-	bool isSpecial() {return false;}
+	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return false;}
 	bool isERROR() {return false;}
 
@@ -223,7 +223,7 @@ public:
 	bool isString() {return false;}
 	bool isBoolean() {return true;}
 	bool isKey() {return false;}
-	bool isSpecial() {return false;}
+	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return false;}
 	bool isERROR() {return false;}
 
@@ -252,7 +252,7 @@ public:
 	bool isString() {return true;}
 	bool isBoolean() {return false;}
 	bool isKey() {return false;}
-	bool isSpecial() {return false;}
+	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return false;}
 	bool isERROR() {return false;}
 
@@ -279,7 +279,7 @@ public:
 	bool isString() {return false;}
 	bool isBoolean() {return false;}
 	bool isKey() {return false;}
-	bool isSpecial() {return false;}
+	bool isSpecial(TokenType type) {return false;}
 	bool isEOF() {return false;}
 	bool isERROR() {return false;}
 
@@ -319,7 +319,7 @@ public:
 	bool isKey() override {
 		return true;
 	}
-	bool isSpecial() override {
+	bool isSpecial(TokenType type) override {
 		return false;
 	}
 	bool isEOF() override {
@@ -395,8 +395,8 @@ public:
 	bool isKey() override {
 		return false;
 	}
-	bool isSpecial() override {
-		return true;
+	bool isSpecial(TokenType type) override {
+		return type == value;
 	}
 	bool isEOF() override {
 		return false;
@@ -408,13 +408,13 @@ public:
 	std::string getText() {
 		switch(value) {
 		case LEFTPAREN:
-			return "LEFTPAREN (";
+			return "(";
 		case RIGHTPAREN:
-			return "RIGHTPAREN )";
+			return ")";
 		case APOST:
 			return "APOST";
 		case DOT:
-			return "DOT .";
+			return ".";
 		}
 	}
 
