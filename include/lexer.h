@@ -199,7 +199,7 @@ public:
 	bool isERROR() {return false;}
 
 
-	std::string getText() {return "identifier  " + str;}
+	std::string getText() {return "id:"+str;}
 	int getNumber() {return 0;};
 private:
 	std::string str;
@@ -213,9 +213,9 @@ public:
 	BooleanToken(int line,std::string s)
 	: Token(line) {
 		if(s == "t")
-			value = true;
+			value = 0;
 		else
-			value = false;
+			value = 1;
 	}
 
 	bool isIdentifier() {return false;}
@@ -229,13 +229,13 @@ public:
 
 	std::string getText() {
 		if(value)
-			return "boolean  true";
+			return "boolean:true";
 		else
-			return "boolean  false";
+			return "boolean:false";
 	}
-	int getNumber() {return 0;}
+	int getNumber() {return value;}
 private:
-	bool value;
+	int value;
 };
 
 
@@ -256,7 +256,7 @@ public:
 	bool isEOF() {return false;}
 	bool isERROR() {return false;}
 
-	std::string getText() {return "string  "+value;};
+	std::string getText() {return "string:"+value;};
 	int getNumber() {return 0;};
 private:
 	std::string value;
@@ -286,7 +286,7 @@ public:
 	std::string getText() {
 		std::ostringstream istr;
 		istr<<value;
-		return "number  "+istr.str();
+		return "number:"+istr.str();
 	}
 
 	int getNumber() {return value;}

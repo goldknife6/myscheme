@@ -4,7 +4,7 @@
 Lexer::Token &Lexer::peek(int i)
 {
 	if (fullQueue(i))
-		return *deque[i-1];
+		return *deque[i];
 	return *new EOFToken;
 }
 

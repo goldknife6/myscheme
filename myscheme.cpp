@@ -26,5 +26,7 @@ int main(int argc,char *argv[])
 
 	Parser parser(lexer);
 
-	AstTree &tree = parser.beginParse();
+	AstTree *tree;
+	tree = parser.beginParse();
+	std::cout<<tree->toString();
 }
