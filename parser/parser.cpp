@@ -1,6 +1,8 @@
 #include <parser.h>
 #include <ast.h>
 
+using T = Lexer::TokenType;
+
 AstTree *Parser::beginParse()
 {
 	return expression();
@@ -16,7 +18,7 @@ AstTree *Parser::expression()
 {
 	AstTree *t = nullptr;
 
-	if (peek(0)->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		//getToken();
 		if (t = lambdaExpression()) {
 			return t;
@@ -39,13 +41,13 @@ AstTree *Parser::procedureCall()
 	Lexer::SpecialToken *tmp;
 
 	
-	if (token->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		getToken();
 
 		AstTree *p = expression();
 		if (p == nullptr) {
 			std::cout<<"Ill-formed special form:procedure call"<<std::endl;
-			while(1);
+			return nullptr;
 		}
 		mydeque.push_back(p);
 
@@ -72,17 +74,16 @@ AstTree *Parser::literal()
 {
 	AstTree *p = nullptr;
 
-	if (token->isNumber()) {
+	if (peek(0)->isNumber()) {
+		getToken();
 		p = new NumLiteral(*token);
-	} else if (token->isString()) {
+	} else if (peek(0)->isString()) {	
+		getToken();
 		p = new StrLiteral(*token);
-	} else if (token->isBoolean()) {
+	} else if (peek(0)->isBoolean()) {
+		getToken();
 		p = new BoolLiteral(*token);
-	} else {
-		return nullptr;
-	}
-
-	getToken();
+	} else return nullptr;
 
 	return p; 
 }
@@ -93,9 +94,9 @@ AstTree *Parser::lambdaExpression()
 	Lexer::SpecialToken *tmp;
 	AstTree *p;
 	
-	if (peek(0)->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 
-		if (!peek(1)->isKey(Lexer::TokenType::LAMBDA))
+		if (!peek(1)->isKey(T::LAMBDA))
 			return nullptr;
 		
 		getToken();getToken();
@@ -110,7 +111,7 @@ AstTree *Parser::lambdaExpression()
 		mydeque.push_back(p);
 
 		getToken();
-		if(!token->isSpecial(Lexer::TokenType::RIGHTPAREN)) {
+		if(!token->isSpecial(T::RIGHTPAREN)) {
 			std::cout<<"lambda error"<<token->getText()<<std::endl;	
 		}
 
@@ -124,12 +125,12 @@ AstTree *Parser::formals()
 	if (peek(0)->isIdentifier()) {
 		mydeque.push_back(variable());
 		return new Formals(mydeque);
-	} else if (peek(0)->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+	} else if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		getToken();
 		while (peek(0)->isIdentifier()) {
 			mydeque.push_back(variable());	
 		}
-		if(!getToken()->isSpecial(Lexer::TokenType::RIGHTPAREN))
+		if(!getToken()->isSpecial(T::RIGHTPAREN))
 			std::cout<<"formals error"<<std::endl;	
 		return new Formals(mydeque);
 	}
@@ -171,9 +172,9 @@ AstTree *Parser::conditional()
 	std::deque<AstTree*> mydeque;
 	AstTree*p;
 
-	if (token->isSpecial(Lexer::TokenType::LEFTPAREN)) {
+	if (peek(0)->isSpecial(Lexer::TokenType::LEFTPAREN)) {
 
-		if (!peek(0)->isKey(Lexer::TokenType::IF))
+		if (!peek(1)->isKey(Lexer::TokenType::IF))
 			return nullptr;
 		
 		getToken();getToken();
@@ -193,7 +194,8 @@ AstTree *Parser::conditional()
 		p = expression();
 		if (p != nullptr)
 			mydeque.push_back(p);
-		if(!getToken()->isKey(Lexer::TokenType::RIGHTPAREN))
+
+		if(!getToken()->isSpecial(T::RIGHTPAREN))
 			std::cout<<"conditional error"<<std::endl;	
 		
 		return new Conditional(mydeque);
@@ -204,7 +206,54 @@ AstTree *Parser::conditional()
 
 AstTree *Parser::definition()
 {
-	return nullptr;
+	AstTree *p = nullptr,*t = nullptr;
+	bool flage = false;
+
+	std::deque<AstTree*> mydeque;
+//暂不支持DefFormals
+
+	if (peek(0)->isSpecial(T::LEFTPAREN)) {
+		if (peek(1)->isKey(T::DEFINE)) {
+			getToken();getToken();
+
+			if (peek(0)->isSpecial(T::LEFTPAREN)) {
+				getToken();
+				flage = true;
+			}
+
+			p = variable();
+			if (!p) {
+				std::cout<<"definition error"<<std::endl;
+				return nullptr;
+			}
+			mydeque.push_back(p);
+
+			if(!flage)
+				goto Lable;
+
+			while(p = variable()) {
+				mydeque.push_back(p);
+			}	
+			
+			if(!getToken()->isSpecial(T::RIGHTPAREN))
+				std::cout<<"definition error"<<std::endl;
+Lable:
+			t = expression();
+			if (!t) {
+				std::cout<<"definition error"<<std::endl;
+				return nullptr;
+			}
+			mydeque.push_back(t);
+			if(!getToken()->isSpecial(T::RIGHTPAREN))
+				std::cout<<"definition error"<<std::endl;
+
+			return new Definition(mydeque,t);
+		}
+	}
+
+	if(!getToken()->isSpecial(T::RIGHTPAREN))
+			std::cout<<"definition error"<<std::endl;
+	return p;
 }
 
 
