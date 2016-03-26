@@ -22,8 +22,9 @@ int main(int argc,char *argv[])
 		exit(1);
 	}
 
-	Lexer lexer(std::cin);
-
+	//Lexer lexer(std::cin);
+	Lexer lexer(ifs);
+	
 	Parser parser(lexer);
 
 	AstTree *tree = parser.beginParse();

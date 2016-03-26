@@ -38,8 +38,31 @@ AstTree *Parser::expression()
 
 AstTree *Parser::procedureCall()
 {
-	AstTree *t = nullptr;
-	return t;
+	std::deque<AstTree*> mydeque;
+	AstTree *p;
+
+	
+	if (peek(0)->isSpecial(T::LEFTPAREN)) {
+		getToken();
+
+		if (dynamic_cast<Lexer::KeyToken*>(peek(0))) {
+			std::cout<<"unsport bulid-in fun:";
+			std::cout<<peek(0)->getText()<<std::endl;
+			return nullptr; 
+		}
+
+		while (p = expression()) {
+			mydeque.push_back(p);
+		}
+		
+		getToken();
+		if(!token->isSpecial(T::RIGHTPAREN)) {
+			std::cout<<"Unbalanced close parenthesis"<<std::endl;
+			return nullptr;
+		}
+
+		return new Procedure(mydeque);
+	}
 }
 
 AstTree *Parser::variable()
@@ -72,27 +95,67 @@ AstTree *Parser::literal()
 
 AstTree *Parser::lambdaExpression()
 {
-	AstTree *t = nullptr;
-	return t;
+	std::deque<AstTree*> mydeque;
+	Lexer::SpecialToken *tmp;
+	AstTree *p;
+	
+	if (peek(0)->isSpecial(T::LEFTPAREN)) {
+
+		if (!peek(1)->isKey(T::LAMBDA))
+			return nullptr;
+		
+		getToken();getToken();
+		
+		mydeque.push_back(formals());
+
+		mydeque.push_back(body());
+
+		getToken();
+		if(!token->isSpecial(T::RIGHTPAREN)) {
+			std::cout<<"Unbalanced close parenthesis"<<std::endl;	
+		}
+
+		return new Lambda(mydeque);
+	}
 }
 
 AstTree *Parser::formals()
 {
 	std::deque<AstTree*> mydeque;
-	if (peek(0)->isIdentifier()) {
-		mydeque.push_back(variable());
-		return new Formals(mydeque);
-	} else if (peek(0)->isSpecial(T::LEFTPAREN)) {
-		getToken();
-		while (peek(0)->isIdentifier()) {
-			mydeque.push_back(variable());	
-		}
-		if(!getToken()->isSpecial(T::RIGHTPAREN))
-			std::cout<<"formals error"<<std::endl;	
-		return new Formals(mydeque);
-	}
+	bool flage = false;
+	AstTree *p;
 
-	//暂时不支持可变参数
+	p = variable();
+
+	if(p) {
+		mydeque.push_back(p);
+		return new Formals(mydeque,flage);
+	}	
+
+	if (peek(0)->isSpecial(T::LEFTPAREN)) {
+		getToken();
+		
+		while(p = variable()) {
+			mydeque.push_back(p);
+		}
+
+		if (peek(0)->isSpecial(T::DOT)) {
+			getToken();
+			flage = true;
+			while (p = variable()) {
+				mydeque.push_back(p);
+			}
+		}
+
+		getToken();
+		if(!token->isSpecial(T::RIGHTPAREN)) {
+			std::cout<<"Unbalanced close parenthesis"<<std::endl;	
+		}
+
+		return new Formals(mydeque,flage);
+	}
+	
+
 	return nullptr;
 }
 

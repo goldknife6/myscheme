@@ -15,7 +15,7 @@ public:
 
 	virtual std::string toString() override {
 		std::string s;
-		s += "(define  ";
+		s += "(define";
 		std::string sep("");
 		AstTree *p;
 		

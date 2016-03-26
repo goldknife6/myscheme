@@ -13,7 +13,7 @@ public:
 
 	virtual std::string toString() override {
 		std::string s;
-		s += "(Body  ";
+		s += "(Body";
 		std::string sep("");
 		AstTree *p;
 		

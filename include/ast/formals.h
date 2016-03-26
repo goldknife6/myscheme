@@ -4,14 +4,16 @@
 #include "astlist.h"
 
 class Formals : public AstList {
+	bool var;
 public:
-	Formals(std::deque<AstTree*> &deque)
-	:AstList(deque) {
+	Formals(std::deque<AstTree*> &deque,
+		bool v)
+	:AstList(deque),var(v) {
 	}
 
 	virtual std::string toString() override {
 		std::string s;
-		s += "(formals  ";
+		s += "(formals";
 		std::string sep("");
 		AstTree *p;
 		
@@ -20,7 +22,7 @@ public:
 			s += p->toString();
 			sep = "  ";
 		}
-		s += ") ";
+		s += ")";
 		return s;
 	}
 
