@@ -8,9 +8,11 @@
 #include <lexer.h>
 
 class NumLiteral : public AstLeaf {
+	Number *num;
 public:
 	NumLiteral(Lexer::Token &t)
 	:AstLeaf(t) {
+		num = new Number(t.getNumber());
 	}
 
 	int value() {
@@ -21,8 +23,9 @@ public:
 		std::cout<<"NumLiteral check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval() override {
-		std::cout<<"NumLiteral eval not impelmented"<<std::endl;
+	virtual Object *eval(Env *o) override {
+		std::cout<<getValueMsg(num)<<std::endl;
+		return num;
 	}
 
 };

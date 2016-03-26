@@ -30,7 +30,7 @@ public:
 		std::cout<<"Formals check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval() override {
+	virtual Object *eval(Env *o) override {
 		std::cout<<"Formals eval not impelmented"<<std::endl;
 	}
 };

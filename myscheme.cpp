@@ -5,6 +5,7 @@
 
 #include <lexer.h>
 #include <parser.h>
+#include <env.h>
 
 int main(int argc,char *argv[])
 {
@@ -22,15 +23,16 @@ int main(int argc,char *argv[])
 		exit(1);
 	}
 
-	//Lexer lexer(std::cin);
-	Lexer lexer(ifs);
+	Lexer lexer(std::cin);
+	//Lexer lexer(ifs);
 	
 	Parser parser(lexer);
 
 	AstTree *tree = parser.beginParse();
+
 	while(tree) {
-		//tree->eval();
-		std::cout<<tree->toString();
+		tree->eval(new Env());
+		//std::cout<<tree->toString();
 		tree = parser.beginParse();
 	}
 	

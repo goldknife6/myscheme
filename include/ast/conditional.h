@@ -30,7 +30,7 @@ public:
 		std::cout<<"Conditional check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval() override {
+	virtual Object *eval(Env *o) override {
 		if (!test() || !consequent()) {
 			std::cout<<";Ill-formed special form:";
 			std::cout<<toString()<<std::endl;

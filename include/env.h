@@ -3,11 +3,27 @@
 
 #include "object.h"
 #include <string>
+#include <map>
 
 class Env {
+	std::map<std::string,Object*> value;
+	Env *outer;
 public:
-	virtual void put(std::string name, Object value);
-   	virtual Object get(std::string name);
+	Env(Env *o = nullptr)
+	:outer(o) {
+	
+	}
+
+	virtual void put(std::string name, Object *value) {
+		
+	}
+   	virtual Object *get(std::string name) {
+		std::map<std::string,Object*>::iterator it = value.find(name);
+		if (it != value.end())
+			return it->second;
+
+		return nullptr;
+	}
 };
 
 

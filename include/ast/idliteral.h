@@ -23,9 +23,8 @@ public:
 
 	}
 
-	virtual Object *eval() override {
-
-
+	virtual Object *eval(Env *o) override {
+		
 	}
 };
 

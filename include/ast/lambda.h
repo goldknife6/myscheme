@@ -36,7 +36,7 @@ public:
 		std::cout<<"Lambda check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval() override {
+	virtual Object *eval(Env *o) override {
 		std::cout<<"Lambda eval not impelmented"<<std::endl;
 	}
 };

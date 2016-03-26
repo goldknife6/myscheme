@@ -3,6 +3,7 @@
 
 #include "astlist.h"
 #include "formals.h"
+#include "env.h"
 
 class Sequence : public AstList {
 public:
@@ -31,7 +32,7 @@ public:
 		std::cout<<"Sequence check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval() override {
+	virtual Object *eval(Env *o) override {
 		std::cout<<"Sequence eval not impelmented"<<std::endl;
 	}
 };

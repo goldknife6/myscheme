@@ -199,7 +199,7 @@ public:
 	bool isERROR() {return false;}
 
 
-	std::string getText() {return "id:"+str;}
+	std::string getText() {return str;}
 	int getNumber() {return 0;};
 private:
 	std::string str;

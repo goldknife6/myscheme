@@ -3,7 +3,7 @@
 
 #include "astleaf.h"
 #include "object.h"
-
+#include <env.h>
 #include <lexer.h>
 
 class BoolLiteral : public AstLeaf {
@@ -20,7 +20,7 @@ public:
 		std::cout<<"Conditional check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval() override {
+	virtual Object *eval(Env *o) override {
 		std::cout<<"Conditional eval not impelmented"<<std::endl;
 	}
 

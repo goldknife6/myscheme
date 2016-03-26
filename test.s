@@ -1,10 +1,1 @@
-
-(define (filtered-accumulate filter combiner null-value term a next b)
-	(define (iter a res)
-		(cond ((> a b) res)
-		      ((filter (term a)) (iter (next a) (combiner (term a) res)))
-		      (else (iter (next a) res))
-		)
-	)
-	(iter a null-value)
-)
+(+ 1 2)

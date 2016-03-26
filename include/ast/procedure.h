@@ -2,6 +2,7 @@
 #define _PROCEDURE_SCHEMER
 
 #include "astlist.h"
+#include "env.h"
 
 class Procedure : public AstList {
 public:
@@ -29,8 +30,16 @@ public:
 		std::cout<<"Procedure check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval() override {
-		std::cout<<"Procedure eval not impelmented"<<std::endl;
+	virtual Object *eval(Env *o) override {
+		IdLiteral *funName = dynamic_cast<IdLiteral *>(child(0));
+		Object *fun = o->get(funName->getName());
+
+		if(!fun) {
+			std::cout<<getUnboundMsg(funName->getName());
+			return nullptr;
+		}
+
+		std::cout<<funName;
 	}
 };
 

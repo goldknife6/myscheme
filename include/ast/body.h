@@ -4,6 +4,7 @@
 #include "astlist.h"
 #include "formals.h"
 #include "object.h"
+#include <env.h>
 
 class Body : public AstList {
 public:
@@ -28,7 +29,7 @@ public:
 	virtual void check() override {
 		std::cout<<"Body check not impelmented"<<std::endl;
 	}
-	virtual Object *eval() override {
+	virtual Object *eval(Env *o) override {
 		std::cout<<"Body eval not impelmented"<<std::endl;
 	}
 

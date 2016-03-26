@@ -22,7 +22,7 @@ public:
 		std::cout<<"StrLiteral check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval() override {
+	virtual Object *eval(Env *e) override {
 		std::cout<<"StrLiteral eval not impelmented"<<std::endl;
 	}
 };

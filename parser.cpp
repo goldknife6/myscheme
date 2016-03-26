@@ -31,7 +31,7 @@ AstTree *Parser::expression()
 	} else if (t = literal()) {
 		return t;
 	} else if (t = variable())
-			return t;
+		return t;
 	
 	return nullptr;
 }
