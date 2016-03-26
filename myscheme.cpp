@@ -28,6 +28,7 @@ int main(int argc,char *argv[])
 
 	AstTree *tree = parser.beginParse();
 	while(tree) {
+		//tree->eval();
 		std::cout<<tree->toString();
 		tree = parser.beginParse();
 	}

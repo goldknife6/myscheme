@@ -23,6 +23,14 @@ public:
 		s += ") ";
 		return s;
 	}
+
+	virtual void check() override {
+		std::cout<<"Formals check not impelmented"<<std::endl;
+	}
+
+	virtual Object *eval() override {
+		std::cout<<"Formals eval not impelmented"<<std::endl;
+	}
 };
 
 

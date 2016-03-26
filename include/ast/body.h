@@ -3,14 +3,13 @@
 
 #include "astlist.h"
 #include "formals.h"
+#include "object.h"
 
 class Body : public AstList {
 public:
-	Body(std::deque<AstTree*> &deque)
-	:AstList(deque) {
-		
+	Body(std::deque<AstTree*> &def)
+	:AstList(def) {
 	}
-
 
 	virtual std::string toString() override {
 		std::string s;
@@ -26,6 +25,13 @@ public:
 		s += ")\n";
 		return s;
 	}
+	virtual void check() override {
+		std::cout<<"Body check not impelmented"<<std::endl;
+	}
+	virtual Object *eval() override {
+		std::cout<<"Body eval not impelmented"<<std::endl;
+	}
+
 };
 
 

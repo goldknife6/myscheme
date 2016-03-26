@@ -9,32 +9,28 @@ INC = include
 CFLAGS = -I $(INC) -std=c++11
 TARGET = myscheme
 OBJDIR = obj
-OBJ = $(OBJDIR)/myscheme.o \
-	$(OBJDIR)/lexer.o \
-	$(OBJDIR)/chartype.o\
-	$(OBJDIR)/parser.o
+OBJ = myscheme.o lexer.o chartype.o parser.o
+DEPS = parser.d
 
-
-$(TARGET):$(OBJ) $(OBJDIR)/myscheme.o
+$(TARGET):$(OBJ) $(DEPS)
 	$(CC) $(CFLAGS) $(OBJ) -o $@
 
-$(OBJDIR)/myscheme.o:$(INC)/lexer.h $(INC)/parser.h myscheme.cpp \
-			$(OBJDIR)/lexer.o $(OBJDIR)/chartype.o \
-			$(OBJDIR)/parser.o
+myscheme.o:$(INC)/lexer.h $(INC)/parser.h myscheme.cpp lexer.o chartype.o parser.o
 	$(CC) $(CFLAGS) -c $(TARGET).cpp -o $@
 
-$(OBJDIR)/lexer.o:$(INC)/lexer.h lexer/lexer.cpp
-	$(CC) $(CFLAGS) -c lexer/lexer.cpp -o $@
+lexer.o:$(INC)/lexer.h lexer.cpp
+	$(CC) $(CFLAGS) -c lexer.cpp -o $@
 
-$(OBJDIR)/chartype.o:util/chartype.cpp
-	$(CC) $(CFLAGS) -c util/chartype.cpp -o $@
+chartype.o:chartype.cpp
+	$(CC) $(CFLAGS) -c chartype.cpp -o $@
 
-$(OBJDIR)/parser.o:parser/parser.cpp $(INC)/parser.h \
-				$(INC)/ast.h $(INC)/ast/astleaf.h \
-				$(INC)/ast/asttree.h $(INC)/ast/expression.h \
-				$(INC)/ast/astlist.h $(INC)/ast/numliteral.h \
-				$(INC)/ast/idliteral.h $(INC)/ast/procedure.h  
-	$(CC) $(CFLAGS) -c parser/parser.cpp -o $@
+$(DEPS):
+	$(CC) $(CFLAGS)  -ffreestanding -M parser.cpp > $@
+
+-include $(DEPS)
+
+parser.o:parser.cpp parser.d
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJDIR)/*.o
+	rm -rf *.o *.d

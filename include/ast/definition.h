@@ -5,11 +5,11 @@
 
 #include <deque>
 class Definition : public AstList {
-	AstTree* exp;
-
+	/*用于确定define表达式的参数是否带括号*/
+	bool isDef;
 public:
-	Definition(std::deque<AstTree*> &var,AstTree* e/*exp or body*/) 
-	:AstList(var),exp(e) {
+	Definition(std::deque<AstTree*> &var,bool b = false) 
+	:AstList(var),isDef(false) {
 
 	}
 
@@ -26,6 +26,14 @@ public:
 		}
 		s += ") ";
 		return s;
+	}
+
+	virtual void check() override {
+		std::cout<<"Definition check not impelmented"<<std::endl;
+	}
+
+	virtual Object *eval() override {
+		std::cout<<"Definition eval not impelmented"<<std::endl;
 	}
 };
 

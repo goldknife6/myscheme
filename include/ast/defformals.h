@@ -1,18 +1,19 @@
-#ifndef _PROCEDURE_SCHEMER
-#define _PROCEDURE_SCHEMER
+#ifndef _DEFFORMALS_SCHEMER
+#define _DEFFORMALS_SCHEMER
 
 #include "astlist.h"
 
-class Procedure : public AstList {
+class DefFormals : public AstList {
+	bool var;
 public:
-	Procedure(std::deque<AstTree*> &deque)
-	:AstList(deque) {
-		
+	DefFormals(std::deque<AstTree*> &deque,
+			bool v)
+	:AstList(deque),var(v) {
 	}
 
 	virtual std::string toString() override {
 		std::string s;
-		s += "(proc  ";
+		s += "(DefFormals";
 		std::string sep("");
 		AstTree *p;
 		
@@ -26,15 +27,13 @@ public:
 	}
 
 	virtual void check() override {
-		std::cout<<"Procedure check not impelmented"<<std::endl;
+		std::cout<<"DefFormals check not impelmented"<<std::endl;
 	}
 
 	virtual Object *eval() override {
-		std::cout<<"Procedure eval not impelmented"<<std::endl;
+		std::cout<<"DefFormals eval not impelmented"<<std::endl;
 	}
 };
 
 
-
-
-#endif/*_PROCEDURE_SCHEMER*/
+#endif/*_DEFFORMALS_SCHEMER*/

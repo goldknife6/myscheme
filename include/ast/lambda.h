@@ -3,6 +3,8 @@
 
 #include "astlist.h"
 #include "formals.h"
+#include "object.h"
+#include "env.h"
 
 class Lambda : public AstList {
 public:
@@ -17,17 +19,25 @@ public:
 
 	virtual std::string toString() override {
 		std::string s;
-		s += "(lambda  ";
+		s += "(lambda";
 		std::string sep("");
 		AstTree *p;
 		
 		for(int i = 0; (i < numChildren()) && (p = child(i)); i++) {
 			s += sep;
 			s += p->toString();
-			sep = "  ";
+			sep = " ";
 		}
-		s += ") ";
+		s += ")";
 		return s;
+	}
+
+	virtual void check() override {
+		std::cout<<"Lambda check not impelmented"<<std::endl;
+	}
+
+	virtual Object *eval() override {
+		std::cout<<"Lambda eval not impelmented"<<std::endl;
 	}
 };
 

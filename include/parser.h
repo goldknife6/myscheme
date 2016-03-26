@@ -33,6 +33,7 @@ private:
 	AstTree *body();
 	AstTree *sequence();
 	AstTree *conditional();
+	AstTree *defFormals();
 };
 
 

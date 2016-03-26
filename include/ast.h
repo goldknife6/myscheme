@@ -13,5 +13,6 @@
 #include <ast/body.h>
 #include <ast/conditional.h>
 #include <ast/definition.h>
+#include <ast/defformals.h>
 
 #endif/*_AST_SCHEMER*/

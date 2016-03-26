@@ -2,9 +2,10 @@
 #define _IDLITERAL_SCHEMER
 
 #include "astleaf.h"
+#include "object.h"
+#include "env.h"
 
 #include <string>
-
 #include <lexer.h>
 
 class IdLiteral : public AstLeaf {
@@ -15,6 +16,16 @@ public:
 
 	std::string getName() {
 		return token().getText();
+	}
+
+	virtual void check() override {
+
+
+	}
+
+	virtual Object *eval() override {
+
+
 	}
 };
 

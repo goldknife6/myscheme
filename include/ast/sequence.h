@@ -26,6 +26,14 @@ public:
 		s += ")\n";
 		return s;
 	}
+
+	virtual void check() override {
+		std::cout<<"Sequence check not impelmented"<<std::endl;
+	}
+
+	virtual Object *eval() override {
+		std::cout<<"Sequence eval not impelmented"<<std::endl;
+	}
 };
 
 
