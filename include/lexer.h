@@ -256,7 +256,7 @@ public:
 	bool isEOF() {return false;}
 	bool isERROR() {return false;}
 
-	std::string getText() {return "string:"+value;};
+	std::string getText() {return value;};
 	int getNumber() {return 0;};
 private:
 	std::string value;
@@ -286,7 +286,7 @@ public:
 	std::string getText() {
 		std::ostringstream istr;
 		istr<<value;
-		return "number:"+istr.str();
+		return istr.str();
 	}
 
 	int getNumber() {return value;}

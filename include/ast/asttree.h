@@ -19,6 +19,7 @@ public:
 	virtual std::string getUnboundMsg(std::string s) {
 		return "\n;Unbound variable: " + s + "\n";
 	}
+
 };
 
 

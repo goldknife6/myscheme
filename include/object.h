@@ -29,6 +29,25 @@ public:
 	}
 };
 
+
+class Bool : public Object {
+
+	bool value;	
+public:
+
+	Bool(bool v = false): value(v) {
+	}
+
+	bool getValue() {
+		return value;
+	}
+	
+	virtual std::string toString() override {
+		return "bool";
+	}
+};
+
+
 class String : public Object {
 
 	std::string value;	

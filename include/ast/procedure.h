@@ -31,15 +31,22 @@ public:
 	}
 
 	virtual Object *eval(Env *o) override {
-		IdLiteral *funName = dynamic_cast<IdLiteral *>(child(0));
-		Object *fun = o->get(funName->getName());
+		AstTree *fristChild = child(0);
 
-		if(!fun) {
-			std::cout<<getUnboundMsg(funName->getName());
+		if (fristChild == nullptr)
+			return nullptr;
+
+		Object *p = fristChild->eval(o);
+
+		if(!p) {
 			return nullptr;
 		}
 
-		std::cout<<funName;
+		Function *f = dynamic_cast<Function *>(p);
+		if(!f) {
+			std::cout<<";The object is not applicable."<<std::endl;
+		}
+		return nullptr;
 	}
 };
 

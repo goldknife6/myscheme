@@ -32,7 +32,6 @@ A Scheme Interpreter Using C++
 	　　　　　| `(define (Variable DefFormals) Body)`<br>
 
 `DefFormals` 		——> `Variable*`<br>
-	　　　　　| `Variable* . Variable`<br>
 
 `Expression` 		——> `Variable`<br>
 	　　　　　| `Literal`<br>
@@ -53,7 +52,6 @@ A Scheme Interpreter Using C++
 `LambdaExpression`     ——> `(lambda Formals Body)`<br>
 `Formals`		——> `(Variable*)` <br>
 	　　　　　| `Variable`<br>
-	　　　　　| `(Variable+ . Variable)`<br>
 
 `Body`			——> `Definition*` `Sequence`<br>
 `Sequence`		——> `Command*` `Expression`<br>

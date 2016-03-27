@@ -7,9 +7,11 @@
 #include <lexer.h>
 
 class BoolLiteral : public AstLeaf {
+	Bool * val;
 public:
 	BoolLiteral(Lexer::Token &t)
 	:AstLeaf(t) {
+		val = new Bool(value());
 	}
 
 	bool value() {
@@ -21,7 +23,7 @@ public:
 	}
 
 	virtual Object *eval(Env *o) override {
-		std::cout<<"Conditional eval not impelmented"<<std::endl;
+		return val;
 	}
 
 };

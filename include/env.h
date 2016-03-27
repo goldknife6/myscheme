@@ -14,8 +14,12 @@ public:
 	
 	}
 
-	virtual void put(std::string name, Object *value) {
-		
+	virtual void put(std::string name, Object *obj) {
+		std::map<std::string,Object*>::iterator it = value.find(name);
+		if (it != value.end())
+			delete it->second;
+
+		value[name] = obj;
 	}
    	virtual Object *get(std::string name) {
 		std::map<std::string,Object*>::iterator it = value.find(name);

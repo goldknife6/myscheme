@@ -12,7 +12,7 @@ class NumLiteral : public AstLeaf {
 public:
 	NumLiteral(Lexer::Token &t)
 	:AstLeaf(t) {
-		num = new Number(t.getNumber());
+		num = new Number(value());
 	}
 
 	int value() {
@@ -24,7 +24,6 @@ public:
 	}
 
 	virtual Object *eval(Env *o) override {
-		std::cout<<getValueMsg(num)<<std::endl;
 		return num;
 	}
 

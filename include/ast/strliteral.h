@@ -9,9 +9,11 @@
 #include <lexer.h>
 
 class StrLiteral : public AstLeaf {
+	String *str;
 public:
 	StrLiteral(Lexer::Token &t)
 	:AstLeaf(t) {
+		str = new String(value());
 	}
 
 	std::string value() {
@@ -23,7 +25,7 @@ public:
 	}
 
 	virtual Object *eval(Env *e) override {
-		std::cout<<"StrLiteral eval not impelmented"<<std::endl;
+		return str;		
 	}
 };
 

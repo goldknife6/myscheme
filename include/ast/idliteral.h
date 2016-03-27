@@ -23,8 +23,13 @@ public:
 
 	}
 
-	virtual Object *eval(Env *o) override {
-		
+	virtual Object *eval(Env *e) override {
+		Object *obj;
+		obj = e->get(getName());
+		if(!obj) {
+			std::cout<<getUnboundMsg(getName())<<std::endl;
+		}
+		return obj;
 	}
 };
 

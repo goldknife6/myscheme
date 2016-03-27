@@ -29,10 +29,13 @@ int main(int argc,char *argv[])
 	Parser parser(lexer);
 
 	AstTree *tree = parser.beginParse();
+	Env *e = new Env();
+	Object *o;
 
 	while(tree) {
-		tree->eval(new Env());
-		//std::cout<<tree->toString();
+		o = tree->eval(e);
+		if(o)
+		std::cout<<o->toString()<<std::endl;
 		tree = parser.beginParse();
 	}
 	

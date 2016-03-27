@@ -34,15 +34,15 @@ public:
 	virtual std::string toString() override {
 		std::string s;
 		s += "(define";
-		std::string sep("");
-		AstTree *p;
 		
-		for(int i = 0; (i < numChildren()) && (p = child(i)); i++) {
-			s += sep;
-			s += p->toString();
-			sep = "  ";
-		}
-		s += ") ";
+		if(name())
+			s+= " "+name()->toString();
+		if(para())
+			s+= " "+para()->toString();
+		if(body())
+			s+= " "+body()->toString();
+
+		s += ")";
 		return s;
 	}
 
@@ -50,8 +50,27 @@ public:
 		std::cout<<"Definition check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval(Env *o) override {
-		std::cout<<"Definition eval not impelmented"<<std::endl;
+	virtual Object *eval(Env *e) override {
+		Object *obj;
+
+		if (!name()) {
+			std::cout<<this->toString();
+			return nullptr;
+		}
+
+		if (!isDef) {
+			AstTree *exp = body();
+			if(exp) {
+				IdLiteral* var = dynamic_cast<IdLiteral*>(name());
+				obj = exp->eval(e);
+				e->put(var->getName(),obj);
+			}
+		} else {
+
+			
+		}
+
+		return obj;
 	}
 };
 
