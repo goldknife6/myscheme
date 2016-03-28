@@ -4,11 +4,9 @@
 #include "astlist.h"
 
 class DefFormals : public AstList {
-	bool var;
 public:
-	DefFormals(std::deque<AstTree*> &deque,
-			bool v)
-	:AstList(deque),var(v) {
+	DefFormals(std::deque<AstTree*> &deque)
+	:AstList(deque){
 	}
 
 	virtual std::string toString() override {
@@ -30,7 +28,7 @@ public:
 		std::cout<<"DefFormals check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval(Env *o) override {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
 		std::cout<<"DefFormals eval not impelmented"<<std::endl;
 	}
 };

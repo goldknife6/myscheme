@@ -23,12 +23,12 @@ public:
 
 	}
 
-	virtual Object *eval(Env *e) override {
-		Object *obj;
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
+		std::shared_ptr<Object> obj;
 		obj = e->get(getName());
-		if(!obj) {
-			std::cout<<getUnboundMsg(getName())<<std::endl;
-		}
+
+		if(!obj) throw *new UnboundException(getName());
+
 		return obj;
 	}
 };

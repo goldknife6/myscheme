@@ -14,7 +14,7 @@ private:
 	Lexer &lexer;
 	Lexer::Token *token;
 
-	Lexer::Token * getToken() {
+	Lexer::Token *getToken() {
 		token = &lexer.read();
 		return token;
 	}

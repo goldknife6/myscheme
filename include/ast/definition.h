@@ -2,6 +2,9 @@
 #define _DEFINITION_SCHEMER
 
 #include "astlist.h"
+#include "defformals.h"
+#include "env.h"
+
 #include <deque>
 
 class Definition : public AstList {
@@ -9,26 +12,25 @@ class Definition : public AstList {
 	bool isDef;
 public:
 	Definition(std::deque<AstTree*> &var,bool b = false) 
-	:AstList(var),isDef(false) {
+	:AstList(var),isDef(b) {
 
 	}
 
-	AstTree *body() {
+	Body *body() {
 		if(!isDef)
-			return child(1);
-		return child(2);
+			return dynamic_cast<Body*>(child(1));
+		return dynamic_cast<Body*>(child(2));
 	}
 
-	AstTree *name() {
-		return child(0);
+	IdLiteral *name() {
+		return dynamic_cast<IdLiteral*>(child(0));
 	}
 
-	AstTree *para() {
+	DefFormals *para() {
 		if(!isDef)
 			return nullptr;
-		else {
-			return child(1);
-		}
+		else 
+			return dynamic_cast<DefFormals*>(child(1));
 	}
 
 	virtual std::string toString() override {
@@ -50,27 +52,29 @@ public:
 		std::cout<<"Definition check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval(Env *e) override {
-		Object *obj;
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
 
-		if (!name()) {
+		IdLiteral* var = name();
+
+		if (!var) {
 			std::cout<<this->toString();
 			return nullptr;
 		}
 
 		if (!isDef) {
-			AstTree *exp = body();
+			Body *exp = body();
 			if(exp) {
-				IdLiteral* var = dynamic_cast<IdLiteral*>(name());
-				obj = exp->eval(e);
+				std::shared_ptr<Object> obj = exp->eval(e);
 				e->put(var->getName(),obj);
 			}
 		} else {
-
-			
+			DefFormals *def = para();
+			Body *b = body();
+			std::shared_ptr<NormalFunction> fun(new NormalFunction(def,b,e));
+			e->put(var->getName(),fun);
 		}
-
-		return obj;
+		
+		std::cout<<";Value: "<<var->getName()<<std::endl;
 	}
 };
 

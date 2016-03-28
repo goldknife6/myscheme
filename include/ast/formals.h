@@ -30,7 +30,7 @@ public:
 		std::cout<<"Formals check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval(Env *o) override {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
 		std::cout<<"Formals eval not impelmented"<<std::endl;
 	}
 };

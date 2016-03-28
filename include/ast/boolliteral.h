@@ -7,11 +7,10 @@
 #include <lexer.h>
 
 class BoolLiteral : public AstLeaf {
-	Bool * val;
+	std::shared_ptr<Bool> val;
 public:
 	BoolLiteral(Lexer::Token &t)
-	:AstLeaf(t) {
-		val = new Bool(value());
+	:AstLeaf(t),val(new Bool(value())) {
 	}
 
 	bool value() {
@@ -22,7 +21,7 @@ public:
 		std::cout<<"Conditional check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval(Env *o) override {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
 		return val;
 	}
 

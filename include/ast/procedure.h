@@ -30,22 +30,34 @@ public:
 		std::cout<<"Procedure check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval(Env *o) override {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
 		AstTree *fristChild = child(0);
 
-		if (fristChild == nullptr)
-			return nullptr;
+		if (!fristChild) return nullptr;
 
-		Object *p = fristChild->eval(o);
+		try {
+			std::shared_ptr<Object> p = fristChild->eval(e);
 
-		if(!p) {
-			return nullptr;
+			std::shared_ptr<NormalFunction> f = std::dynamic_pointer_cast<NormalFunction>(p);
+
+			if(!f.use_count()) 
+				throw *new NotAppException(fristChild->toString());
+
+			std::shared_ptr<Environment> newEnv = f->makeEnv();
+			DefFormals* def = f->parameters();
+			def->eval(newEnv);
+
+			Body* b = f->body();
+			return b->eval(newEnv);		
+	
+		} catch (UnboundException &e) {
+			if(fristChild->toString() == "+")
+				e.printMsg();
 		}
 
-		Function *f = dynamic_cast<Function *>(p);
-		if(!f) {
-			std::cout<<";The object is not applicable."<<std::endl;
-		}
+
+		
+		
 		return nullptr;
 	}
 };

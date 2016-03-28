@@ -6,7 +6,7 @@
 
 CC = g++
 INC = include
-CFLAGS = -I $(INC) -std=c++11
+CFLAGS = -I $(INC) -std=c++11 
 TARGET = myscheme
 OBJDIR = obj
 OBJ = myscheme.o lexer.o chartype.o parser.o

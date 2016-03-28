@@ -1,11 +1,12 @@
 #include <iostream>
 #include <fstream>
+#include <memory>
 
-#include <stdlib.h>
 
 #include <lexer.h>
 #include <parser.h>
 #include <env.h>
+#include <excpetion.h>
 
 int main(int argc,char *argv[])
 {
@@ -29,13 +30,23 @@ int main(int argc,char *argv[])
 	Parser parser(lexer);
 
 	AstTree *tree = parser.beginParse();
-	Env *e = new Env();
-	Object *o;
+	std::shared_ptr<Environment> golbalEnv(new Environment());
+	std::shared_ptr<Object> obj;	
 
 	while(tree) {
-		o = tree->eval(e);
-		if(o)
-		std::cout<<o->toString()<<std::endl;
+		try {
+			//obj = tree->eval(golbalEnv);
+			std::cout<<tree->toString()<<std::endl;
+
+		} catch (UnboundException &e) {
+			e.printMsg();
+		} catch (NotAppException &e) {
+			e.printMsg();
+
+		} catch (...) {
+			std::cerr<<"what?"<<std::endl;
+		}
+
 		tree = parser.beginParse();
 	}
 	

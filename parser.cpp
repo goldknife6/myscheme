@@ -139,14 +139,6 @@ AstTree *Parser::formals()
 			mydeque.push_back(p);
 		}
 
-		if (peek(0)->isSpecial(T::DOT)) {
-			getToken();
-			flage = true;
-			while (p = variable()) {
-				mydeque.push_back(p);
-			}
-		}
-
 		getToken();
 		if(!token->isSpecial(T::RIGHTPAREN)) {
 			std::cout<<"Unbalanced close parenthesis"<<std::endl;	
@@ -224,7 +216,6 @@ AstTree *Parser::definition()
 	std::deque<AstTree*> mydeque;
 	AstTree *p;
 	bool flage = false;
-//暂不支持DefFormals
 
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		if (peek(1)->isKey(T::DEFINE)) {
@@ -265,32 +256,12 @@ AstTree *Parser::defFormals()
 {
 	std::deque<AstTree*> mydeque;
 	AstTree *p = nullptr;
-	bool flage = false;
 
 	while (p = variable()) {
 		mydeque.push_back(p);
 	}
 
-	if (peek(0)->isSpecial(T::DOT)) {
-		getToken();
-		flage = true;
-
-		while (p = variable()) {
-			mydeque.push_back(p);
-		}
-
-		p = new DefFormals(mydeque,flage);
-
-		if (!peek(0)->isSpecial(T::RIGHTPAREN)) {
-			std::cout<<";Ill-formed dotted list:";
-			std::cout<<p->toString()<<std::endl;
-		}
-		return p;
-	}
-
-	p = new DefFormals(mydeque,flage);
-
-	return p ;
+	return new DefFormals(mydeque);
 }
 
 

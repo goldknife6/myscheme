@@ -29,8 +29,12 @@ public:
 	virtual void check() override {
 		std::cout<<"Body check not impelmented"<<std::endl;
 	}
-	virtual Object *eval(Env *o) override {
-		std::cout<<"Body eval not impelmented"<<std::endl;
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
+		std::shared_ptr<Object> res;
+		int i = numChildren();
+		for(int j = 0;j < i; j++)
+			res = child(j)->eval(e);
+		return res;
 	}
 
 };

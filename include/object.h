@@ -4,6 +4,10 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <ast/defformals.h>
+#include <ast/body.h>
+#include <env.h>
+#include <excpetion.h>
 
 class Object {
 public:
@@ -43,7 +47,7 @@ public:
 	}
 	
 	virtual std::string toString() override {
-		return "bool";
+		return "Bool object\n";
 	}
 };
 
@@ -62,13 +66,72 @@ public:
 	}
 
 	virtual std::string toString() override {
+		return "String object\n";
 	}
 };
 
-class Function : public Object {
 
+class Function : public Object {
 public:
-	virtual std::string toString() override {
+	DefFormals *def;
+	Body *b;
+	std::shared_ptr<Environment> env;
+
+	Function(DefFormals *d,Body *body,std::shared_ptr<Environment> e)
+	:def(d),b(body),env(e) {
+
 	}
+
+	virtual DefFormals* parameters() =0;
+	virtual Body* body() =0;
+	virtual std::shared_ptr<Environment> makeEnv() =0;
+};
+
+class PrimFunction : public Function {
+public:
+	PrimFunction(DefFormals *d,Body *body,std::shared_ptr<Environment> e)
+	:Function(d,body,e) {
+	}
+
+	DefFormals* parameters() {
+		return def;
+	}
+
+	Body* body() {
+		throw *new SchemeError("PrimFunction call body()\n");
+	}
+
+	std::shared_ptr<Environment> makeEnv() {
+		return std::shared_ptr<Environment>(new Environment(env));
+	}
+
+	virtual std::string toString() override {
+		return "PrimFunction object\n";
+	}
+
+};
+
+class NormalFunction : public Function {
+public:
+	NormalFunction(DefFormals *d,Body *body,std::shared_ptr<Environment> e)
+	:Function(d,body,e) {
+	}
+
+	DefFormals* parameters() {
+		return def;
+	}
+
+	Body* body() {
+		return b;
+	}
+
+	std::shared_ptr<Environment> makeEnv() {
+		return std::shared_ptr<Environment>(new Environment(env));
+	}
+
+	virtual std::string toString() override {
+		return "NormalFunction object\n";
+	}
+
 };
 #endif/*_OBJECT_SCHEMER*/

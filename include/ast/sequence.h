@@ -15,7 +15,7 @@ public:
 
 	virtual std::string toString() override {
 		std::string s;
-		s += "(Sequence  ";
+		s += "(Sequence";
 		std::string sep("");
 		AstTree *p;
 		
@@ -32,8 +32,12 @@ public:
 		std::cout<<"Sequence check not impelmented"<<std::endl;
 	}
 
-	virtual Object *eval(Env *o) override {
-		std::cout<<"Sequence eval not impelmented"<<std::endl;
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
+		std::shared_ptr<Object> res;
+		int i = numChildren();
+		for(int j = 0;j < i; j++)
+			res = child(j)->eval(e);
+		return res;
 	}
 };
 
