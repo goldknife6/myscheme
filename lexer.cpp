@@ -1,11 +1,12 @@
 #include <lexer.h>
 #include <chartype.h>
+#include <excpetion.h>
 
 Lexer::Token &Lexer::peek(int i)
 {
 	if (fullQueue(i))
 		return *deque[i];
-	return *new EOFToken;
+	throw *new EOFException;
 }
 
 Lexer::Token &Lexer::read()
@@ -15,7 +16,7 @@ Lexer::Token &Lexer::read()
 		deque.pop_front();
 		return *p;
 	}
-	return *new EOFToken;
+	throw *new EOFException;
 }
 
 bool Lexer::fullQueue(int count)
@@ -149,6 +150,7 @@ Lexer::TokenType Lexer::getToken(void)
 					case EOF:
 						flage = false;
 						currentToken = ENDFILE;
+						throw *new EOFException;
 						break;
 					default:
 						currentToken = ERROR;

@@ -40,8 +40,7 @@ public:
 
 			std::shared_ptr<NormalFunction> f = std::dynamic_pointer_cast<NormalFunction>(p);
 
-			if(!f.use_count()) 
-				throw *new NotAppException(fristChild->toString());
+			if(!f) throw *new NotAppException(fristChild->toString());
 
 			std::shared_ptr<Environment> newEnv = f->makeEnv();
 			DefFormals* def = f->parameters();

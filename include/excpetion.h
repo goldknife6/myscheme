@@ -6,9 +6,10 @@
 
 class SchemeException : public std::runtime_error {
 public:
-	SchemeException(const std::string &s)
+	SchemeException(const std::string &s = "")
 	: std::runtime_error(s) {
 	}
+
 	virtual void printMsg() {
 		std::cout<<what()<<std::endl;
 	}
@@ -16,23 +17,56 @@ public:
 
 class UnboundException : public SchemeException {
 public:
-	UnboundException(const std::string &s)
+	UnboundException(const std::string &s = "")
 	: SchemeException("\n;Unbound variable: " + s + "\n") {
 	}
 
 };
 
+class IllFormedException : public SchemeException {
+public:
+	IllFormedException(const std::string &s = "")
+	: SchemeException("\n;Ill-formed special form: " + s + "\n") {
+	}
+
+};
+
+class IllegalCharException : public SchemeException {
+public:
+	IllegalCharException(const std::string &s = "")
+	: SchemeException("\n;Illegal character: " + s + "\n") {
+	}
+
+};
+
+
 class NotAppException : public SchemeException {
 public:
-	NotAppException(const std::string &s)
+	NotAppException(const std::string &s = "")
 	: SchemeException("\nThe object "+ s + " is not applicable.\n") {
+	}
+
+};
+
+class UnbalancedException : public SchemeException {
+public:
+	UnbalancedException(const std::string &s = "")
+	: SchemeException("\nUnbalanced close parenthesis.\n") {
+	}
+
+};
+
+class EOFException : public SchemeException {
+public:
+	EOFException(const std::string &s = "")
+	: SchemeException("\nend of file.\n") {
 	}
 
 };
 
 class SchemeError : public std::logic_error {
 public:
-	SchemeError(const std::string &s)
+	SchemeError(const std::string &s = "")
 	: std::logic_error(s) {
 	}
 };

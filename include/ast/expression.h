@@ -11,12 +11,28 @@ public:
 	Expression(AstTree *v):value(v) {
 	}
 
+	virtual int numChildren() {
+		return 1;
+	}
+
+	virtual AstTree *child(int i) {
+		return value;
+	}
+
+	virtual std::string location() {
+		return 	value->location();
+	}
+
+	virtual std::string toString() {
+		return 	value->toString();
+	}
+
 	virtual void check() override {
 		std::cout<<"Expression check not impelmented"<<std::endl;
 	}
 
 	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
-		std::cout<<"Expression eval not impelmented"<<std::endl;
+		return value->eval(e);
 	}
 };
 

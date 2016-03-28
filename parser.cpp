@@ -20,20 +20,22 @@ AstTree *Parser::expression()
 
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		if (t = lambdaExpression()) {
-			return t;
+			return new Expression(t);
 		} else if (t = conditional()) { 
-			return t;
+			return new Expression(t);
 		} else if (t = definition()) {
-			return t;
+			return new Expression(t);
 		} else if (t = procedureCall()) {
-			return t;		
+			return new Expression(t);		
 		}
 	} else if (t = literal()) {
-		return t;
-	} else if (t = variable())
-		return t;
-	
-	return nullptr;
+		return new Expression(t);
+	} else if (t = variable()) {
+		return new Expression(t);
+	} else {
+		return nullptr;
+	}
+
 }
 
 AstTree *Parser::procedureCall()
@@ -41,24 +43,23 @@ AstTree *Parser::procedureCall()
 	std::deque<AstTree*> mydeque;
 	AstTree *p;
 
-	
+	if (peek(0)->isSpecial(T::LEFTPAREN) && 
+		peek(1)->isSpecial(T::RIGHTPAREN)) {
+		getToken();getToken();
+		return nullptr;
+	}
+
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		getToken();
-
-		if (dynamic_cast<Lexer::KeyToken*>(peek(0))) {
-			std::cout<<"unsport bulid-in fun:";
-			std::cout<<peek(0)->getText()<<std::endl;
-			return nullptr; 
-		}
 
 		while (p = expression()) {
 			mydeque.push_back(p);
 		}
 		
 		getToken();
+
 		if(!token->isSpecial(T::RIGHTPAREN)) {
-			std::cout<<"Unbalanced close parenthesis"<<std::endl;
-			return nullptr;
+			throw *new UnbalancedException;
 		}
 
 		return new Procedure(mydeque);
@@ -87,7 +88,7 @@ AstTree *Parser::literal()
 	} else if (peek(0)->isBoolean()) {
 		getToken();
 		p = new BoolLiteral(*token);
-	} else return nullptr;
+	}
 
 	return p; 
 }
@@ -111,8 +112,9 @@ AstTree *Parser::lambdaExpression()
 		mydeque.push_back(body());
 
 		getToken();
+
 		if(!token->isSpecial(T::RIGHTPAREN)) {
-			std::cout<<"Unbalanced close parenthesis"<<std::endl;	
+			throw *new UnbalancedException;
 		}
 
 		return new Lambda(mydeque);
@@ -154,11 +156,12 @@ AstTree *Parser::formals()
 AstTree *Parser::body()
 {
 	AstTree *p;
-	std::deque<AstTree*> mydeque;
+	std::deque<AstTree*> def;
+	std::deque<AstTree*> seq;
 
 	while(p = definition())
-		mydeque.push_back(p);
-
+		def.push_back(p);
+//bug
 	mydeque.push_back(sequence());
 
 	return new Body(mydeque);
@@ -166,16 +169,8 @@ AstTree *Parser::body()
 
 AstTree *Parser::sequence()
 {
-	//暂时不支持Command
 	AstTree *p;
 	std::deque<AstTree*> mydeque;
-
-	p = expression();
-
-	if (p == nullptr)
-		return nullptr;
-
-	mydeque.push_back(p);
 
 	while (p = expression()) {
 		mydeque.push_back(p);	
@@ -229,7 +224,7 @@ AstTree *Parser::definition()
 				mydeque.push_back(defFormals());
 
 				if(!getToken()->isSpecial(T::RIGHTPAREN))
-					std::cout<<"definition error"<<std::endl;
+					throw *new UnbalancedException;
 
 				mydeque.push_back(body());
 				
@@ -240,9 +235,10 @@ AstTree *Parser::definition()
 				}
 				
 			}
-			
-			if(!getToken()->isSpecial(T::RIGHTPAREN))
-				std::cout<<"Unbalanced close parenthesis"<<std::endl;
+			getToken();
+			if(!token->isSpecial(T::RIGHTPAREN))
+				throw *new UnbalancedException;
+
 			return new Definition(mydeque,flage);
 		}
 	}

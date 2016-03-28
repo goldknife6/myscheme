@@ -29,17 +29,34 @@ public:
 	virtual std::string toString() override {
 		std::ostringstream os;
 		os<<value;
-		return os.str();
+		return "Number object: "+os.str()+"\n";
 	}
 };
 
+class Id : public Object {
+
+	std::string value;	
+public:
+
+	Id(std::string s): value(s) {
+	}
+
+	std::string getValue() {
+		return value;
+	}
+	
+	virtual std::string toString() override {
+		return "Id object: "+value+"\n";
+	}
+
+};
 
 class Bool : public Object {
 
 	bool value;	
 public:
 
-	Bool(bool v = false): value(v) {
+	Bool(bool v): value(v) {
 	}
 
 	bool getValue() {
@@ -47,7 +64,9 @@ public:
 	}
 	
 	virtual std::string toString() override {
-		return "Bool object\n";
+		if(value)
+			return "Bool object: true\n";
+		return "Bool object: false\n";
 	}
 };
 
@@ -66,7 +85,7 @@ public:
 	}
 
 	virtual std::string toString() override {
-		return "String object\n";
+		return "String object: \""+value+"\"\n";
 	}
 };
 

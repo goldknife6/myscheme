@@ -17,9 +17,15 @@ public:
 	}
 
 	Body *body() {
+		if(isDef)
+			return dynamic_cast<Body*>(child(2));
+		return nullptr;
+	}
+	
+	Expression* expression() {
 		if(!isDef)
-			return dynamic_cast<Body*>(child(1));
-		return dynamic_cast<Body*>(child(2));
+			return dynamic_cast<Expression*>(child(1));
+		return nullptr;
 	}
 
 	IdLiteral *name() {
@@ -52,29 +58,31 @@ public:
 		std::cout<<"Definition check not impelmented"<<std::endl;
 	}
 
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> env) override {
 
 		IdLiteral* var = name();
 
 		if (!var) {
-			std::cout<<this->toString();
+			//std::cout<<this->toString();
 			return nullptr;
 		}
 
 		if (!isDef) {
-			Body *exp = body();
+			Expression *exp = expression();
 			if(exp) {
-				std::shared_ptr<Object> obj = exp->eval(e);
-				e->put(var->getName(),obj);
+				std::shared_ptr<Object> obj = exp->eval(env);
+				env->put(var->getName(),obj);
 			}
 		} else {
 			DefFormals *def = para();
 			Body *b = body();
-			std::shared_ptr<NormalFunction> fun(new NormalFunction(def,b,e));
-			e->put(var->getName(),fun);
+			if(!b || !b->numChildren()) *new IllFormedException(this->toString());
+			std::cout<<b->numChildren();
+			std::shared_ptr<NormalFunction> fun(new NormalFunction(def,b,env));
+			env->put(var->getName(),fun);
 		}
 		
-		std::cout<<";Value: "<<var->getName()<<std::endl;
+		return std::shared_ptr<Id>(new Id(var->getName()));
 	}
 };
 

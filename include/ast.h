@@ -1,6 +1,7 @@
 #ifndef _AST_SCHEMER
 #define _AST_SCHEMER
 
+#include <ast/astnull.h>
 #include <ast/boolliteral.h>
 #include <ast/expression.h>
 #include <ast/idliteral.h>

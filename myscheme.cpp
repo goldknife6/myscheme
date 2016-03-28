@@ -29,25 +29,53 @@ int main(int argc,char *argv[])
 	
 	Parser parser(lexer);
 
-	AstTree *tree = parser.beginParse();
-	std::shared_ptr<Environment> golbalEnv(new Environment());
-	std::shared_ptr<Object> obj;	
 
-	while(tree) {
+	std::shared_ptr<Environment> golbalEnv(new Environment());
+	
+
+	AstTree *tree = nullptr;
+
+	try {
+		tree = parser.beginParse();
+	} catch (UnbalancedException &e) {
+		e.printMsg();
+		
+	} catch (EOFException &e) {
+		e.printMsg();
+		return 0;
+	} catch (...) {
+		std::cerr<<"what exception?1"<<std::endl;
+	}
+	
+	while(true) {
 		try {
-			//obj = tree->eval(golbalEnv);
-			std::cout<<tree->toString()<<std::endl;
+			if(tree) {
+				std::shared_ptr<Object> obj = tree->eval(golbalEnv);
+				if(obj) std::cout<<obj->toString()<<std::endl;
+			}
+			//std::cout<<tree->toString()<<std::endl;
 
 		} catch (UnboundException &e) {
 			e.printMsg();
 		} catch (NotAppException &e) {
 			e.printMsg();
-
+		} catch (EOFException &e) {
+			e.printMsg();
+			return 0;
 		} catch (...) {
-			std::cerr<<"what?"<<std::endl;
+			std::cerr<<"what exception?2"<<std::endl;
 		}
 
-		tree = parser.beginParse();
+		try {
+			tree = parser.beginParse();
+		} catch (UnbalancedException &e) {
+			e.printMsg();
+		} catch (EOFException &e) {
+			e.printMsg();
+			return 0;
+		} catch (...) {
+			std::cerr<<"what exception?3"<<std::endl;
+		}
 	}
 	
 }

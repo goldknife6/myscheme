@@ -15,19 +15,18 @@ public:
 	:outer(e) {
 	}
 
-	virtual void put(std::string name, 
-			std::shared_ptr<Object> obj) {
+	void put(std::string name, std::shared_ptr<Object> obj) {
 		value[name] = obj;
 	}
 
-   	virtual std::shared_ptr<Object> get(std::string name) {
+   	std::shared_ptr<Object> get(std::string name) {
 		std::map<std::string,std::shared_ptr<Object>>::iterator it;
 		it = value.find(name);
 
 		if (it != value.end())
 			return it->second;
 
-		return std::shared_ptr<Object>();
+		return nullptr;
 	}
 };
 
