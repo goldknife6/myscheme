@@ -4,12 +4,36 @@
 #include "astlist.h"
 #include "formals.h"
 #include "object.h"
+#include "sequence.h"
 #include <env.h>
 
-class Body : public AstList {
+class Body : public AstTree {
+	std::deque<AstTree*> def;
+	AstTree *seq;
+
 public:
-	Body(std::deque<AstTree*> &def)
-	:AstList(def) {
+	Body(std::deque<AstTree*> &def,AstTree *seq)
+	:seq(seq),def(def) {
+	}
+
+	virtual int numChildren() {
+		return 0;
+	}
+	virtual AstTree *child(int i) {
+		return nullptr;
+	}
+
+	Sequence *sequence() {
+		return dynamic_cast<Sequence*>(seq);
+	}
+
+	virtual std::string location() {
+		AstTree *p;
+		for(int i = 0; (i < numChildren()) && (p = child(i)); i++) {
+			if(!p->location().empty())
+				return p->location();
+		}
+		return "";
 	}
 
 	virtual std::string toString() override {

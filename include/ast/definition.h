@@ -8,8 +8,21 @@
 #include <deque>
 
 class Definition : public AstList {
-	/*用于确定define表达式的参数是否带括号*/
-	bool isDef;
+public:	
+	
+}
+
+class DefinitionNormal : public Definition {
+public:	
+	Expression* expression() {
+		return dynamic_cast<Expression*>(child(1));
+	}
+	
+}
+
+
+
+class DefinitionVarlist : public AstList {
 public:
 	Definition(std::deque<AstTree*> &var,bool b = false) 
 	:AstList(var),isDef(b) {
@@ -45,6 +58,8 @@ public:
 		
 		if(name())
 			s+= " "+name()->toString();
+		if(expression())
+			s+= " "+expression()->toString();
 		if(para())
 			s+= " "+para()->toString();
 		if(body())
@@ -68,7 +83,12 @@ public:
 		}
 
 		if (!isDef) {
-			Expression *exp = expression();
+			Expression *exp;
+
+			if(numChildren() > 2)
+				throw *new IllFormedException(this->toString());
+
+			exp = expression();
 			if(exp) {
 				std::shared_ptr<Object> obj = exp->eval(env);
 				env->put(var->getName(),obj);
@@ -76,8 +96,11 @@ public:
 		} else {
 			DefFormals *def = para();
 			Body *b = body();
-			if(!b || !b->numChildren()) *new IllFormedException(this->toString());
-			std::cout<<b->numChildren();
+			if(!b || !b->sequence()->numChildren()) 
+				throw *new IllFormedException(this->toString());
+
+			std::cout<<b->sequence()->numChildren()<<std::endl;
+		
 			std::shared_ptr<NormalFunction> fun(new NormalFunction(def,b,env));
 			env->put(var->getName(),fun);
 		}

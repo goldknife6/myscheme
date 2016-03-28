@@ -16,13 +16,6 @@ public:
 	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment>) =0;
 	virtual void check() =0;
 
-	virtual std::string getValueMsg(std::shared_ptr<Object> ptr) {
-		return "";
-	}
-
-	virtual std::string getUnboundMsg(std::string s) {
-		return "";
-	}
 };
 
 

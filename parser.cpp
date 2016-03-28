@@ -5,13 +5,13 @@ using T = Lexer::TokenType;
 
 AstTree *Parser::beginParse()
 {
-	return expression();
+	return program();
 }
 
 
 AstTree *Parser::program()
 {
-	
+	return expression();
 }
 
 AstTree *Parser::expression()
@@ -52,9 +52,8 @@ AstTree *Parser::procedureCall()
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		getToken();
 
-		while (p = expression()) {
+		while (p = expression()) 
 			mydeque.push_back(p);
-		}
 		
 		getToken();
 
@@ -113,9 +112,8 @@ AstTree *Parser::lambdaExpression()
 
 		getToken();
 
-		if(!token->isSpecial(T::RIGHTPAREN)) {
+		if(!token->isSpecial(T::RIGHTPAREN))
 			throw *new UnbalancedException;
-		}
 
 		return new Lambda(mydeque);
 	}
@@ -127,25 +125,18 @@ AstTree *Parser::formals()
 	bool flage = false;
 	AstTree *p;
 
-	p = variable();
-
-	if(p) {
+	if(p = variable()) {
 		mydeque.push_back(p);
 		return new Formals(mydeque,flage);
 	}	
 
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		getToken();
-		
-		while(p = variable()) {
+		while(p = variable())
 			mydeque.push_back(p);
-		}
-
 		getToken();
-		if(!token->isSpecial(T::RIGHTPAREN)) {
-			std::cout<<"Unbalanced close parenthesis"<<std::endl;	
-		}
-
+		if(!token->isSpecial(T::RIGHTPAREN)) 
+			throw *new UnbalancedException;	
 		return new Formals(mydeque,flage);
 	}
 	
@@ -156,15 +147,10 @@ AstTree *Parser::formals()
 AstTree *Parser::body()
 {
 	AstTree *p;
-	std::deque<AstTree*> def;
-	std::deque<AstTree*> seq;
-
+	std::deque<AstTree*> mydeque;
 	while(p = definition())
-		def.push_back(p);
-//bug
-	mydeque.push_back(sequence());
-
-	return new Body(mydeque);
+		mydeque.push_back(p);
+	return new Body(mydeque,sequence());
 }
 
 AstTree *Parser::sequence()
@@ -172,13 +158,11 @@ AstTree *Parser::sequence()
 	AstTree *p;
 	std::deque<AstTree*> mydeque;
 
-	while (p = expression()) {
+	while (p = expression())
 		mydeque.push_back(p);	
-	}
 
 	return new Sequence(mydeque);
 }
-
 
 AstTree *Parser::conditional()
 {
@@ -196,15 +180,13 @@ AstTree *Parser::conditional()
 			mydeque.push_back(p);
 
 		getToken();
-		if(!token->isSpecial(T::RIGHTPAREN)) {
-			std::cout<<"Unbalanced close parenthesis"<<std::endl;
-			return nullptr;
-		}
+		if(!token->isSpecial(T::RIGHTPAREN))
+			throw *new UnbalancedException;
+
 		return new Conditional(mydeque);
 	}
 	return nullptr;
 }
-
 
 AstTree *Parser::definition()
 {

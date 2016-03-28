@@ -43,6 +43,8 @@ int main(int argc,char *argv[])
 	} catch (EOFException &e) {
 		e.printMsg();
 		return 0;
+	} catch(IllFormedException &e) {
+		e.printMsg();
 	} catch (...) {
 		std::cerr<<"what exception?1"<<std::endl;
 	}
@@ -62,6 +64,8 @@ int main(int argc,char *argv[])
 		} catch (EOFException &e) {
 			e.printMsg();
 			return 0;
+		} catch(IllFormedException &e) {
+			e.printMsg();
 		} catch (...) {
 			std::cerr<<"what exception?2"<<std::endl;
 		}
