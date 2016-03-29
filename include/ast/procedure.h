@@ -13,16 +13,16 @@ public:
 
 	virtual std::string toString() override {
 		std::string s;
-		s += "(proc  ";
+		s += "(proc";
 		std::string sep("");
 		AstTree *p;
 		
 		for(int i = 0; (i < numChildren()) && (p = child(i)); i++) {
 			s += sep;
 			s += p->toString();
-			sep = "  ";
+			sep = " ";
 		}
-		s += ") ";
+		s += ")";
 		return s;
 	}
 
@@ -40,7 +40,7 @@ public:
 			std::shared_ptr<Object> p = fristChild->eval(env);
 
 			std::shared_ptr<Function> func = std::dynamic_pointer_cast<Function>(p);
-
+			
 			if(!func) throw *new NotAppException(fristChild->toString());
 
 			std::shared_ptr<Environment> newEnv = func->makeEnv();
@@ -56,8 +56,7 @@ public:
 			return func->body()->eval(newEnv);		
 	
 		} catch (UnboundException &e) {
-			if(fristChild->toString() == "+")
-				e.printMsg();
+			throw;
 		}
 
 		return nullptr;

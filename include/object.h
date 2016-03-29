@@ -12,6 +12,9 @@
 class Object {
 public:
 	virtual std::string toString() =0;
+	virtual void destory() {
+		throw *new SchemeError("Object destory");
+	}
 };
 
 class Number : public Object {
@@ -30,10 +33,10 @@ public:
 	virtual std::string toString() override {
 		std::ostringstream os;
 		os<<value;
-		return "Number object: "+os.str();
+		return "Number object :"+os.str();
 	}
 	virtual ~Number() {
-		//std::cout<<toString()<<" destoryed"<<std::endl;
+		std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 
@@ -75,7 +78,7 @@ public:
 		return "Bool object: false";
 	}
 	virtual ~Bool() {
-		//std::cout<<toString()<<"destoryed"<<std::endl;
+		std::cout<<toString()<<"destoryed"<<std::endl;
 	}
 };
 
@@ -97,7 +100,7 @@ public:
 		return "String object: \""+value+"\"";
 	}
 	virtual ~String() {
-		//std::cout<<toString()<<" destoryed"<<std::endl;
+		std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 
@@ -140,15 +143,17 @@ public:
 		return "PrimFunction object";
 	}
 	virtual ~PrimFunction() {
-		//std::cout<<toString()<<" destoryed"<<std::endl;
+		std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 
 };
 
 class NormalFunction : public Function {
+	std::string name;
 public:
-	NormalFunction(DefFormals *d,Body *body,std::shared_ptr<Environment> e)
-	:Function(d,body,e) {
+	NormalFunction(DefFormals *d,Body *body,std::shared_ptr<Environment> e,std::string s)
+	:Function(d,body,e),name(s) {
+		std::cout<<toString()<<" create"<<std::endl;
 	}
 
 	DefFormals* parameters() {
@@ -164,10 +169,10 @@ public:
 	}
 
 	virtual std::string toString() override {
-		return "NormalFunction object";
+		return "NormalFunction object:"+name;
 	}
 	virtual ~NormalFunction() {
-		//std::cout<<toString()<<" destoryed"<<std::endl;
+		std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 #endif/*_OBJECT_SCHEMER*/

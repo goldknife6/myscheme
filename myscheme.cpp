@@ -30,7 +30,7 @@ int main(int argc,char *argv[])
 	Parser parser(lexer);
 
 
-	std::shared_ptr<Environment> golbalEnv(new Environment());
+	std::shared_ptr<Environment> golbalEnv(new Environment(nullptr));
 	
 
 	AstTree *tree = nullptr;
@@ -53,7 +53,9 @@ int main(int argc,char *argv[])
 		try {
 			if(tree) {
 				std::shared_ptr<Object> obj = tree->eval(golbalEnv);
-				if(obj) std::cout<<obj->toString()<<std::endl;
+				if(obj) {
+					std::cout<<obj->toString()<<std::endl;
+				}
 			}
 			//std::cout<<tree->toString()<<std::endl;
 
@@ -71,9 +73,9 @@ int main(int argc,char *argv[])
 			e.printMsg();
 		}  catch (ArugNotMutchException &e) {
 			e.printMsg();
-		} catch (...) {
+		} /*catch (...) {
 			std::cerr<<"what exception?2"<<std::endl;
-		}
+		}*/
 
 		try {
 			tree = parser.beginParse();

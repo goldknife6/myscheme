@@ -6,18 +6,22 @@
 #include <memory>
 
 class Object;
+class Function;
 
 class Environment {
 	std::map<std::string,std::shared_ptr<Object>> value;
 	std::shared_ptr<Environment> outer;
 public:
-	Environment(std::shared_ptr<Environment> e = nullptr)
+	Environment(std::shared_ptr<Environment> e)
 	:outer(e) {
+		std::cout<<"Environment"<<std::endl;
 		if(e != nullptr)
 			return;
-		put("+", nullptr);
 	}
 
+	~Environment() {
+		std::cout<<"~Environment"<<std::endl;	
+	}
 	void put(std::string name, std::shared_ptr<Object> obj) {
 		value[name] = obj;
 	}
@@ -34,7 +38,7 @@ public:
 			return nullptr;
 		}
 	}
-	
+
 	std::shared_ptr<Environment> outerEnv() {
 		return outer;
 	}

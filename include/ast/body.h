@@ -54,13 +54,13 @@ public:
 	virtual void check() override {
 		std::cout<<"Body check not impelmented"<<std::endl;
 	}
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> env) {
 		std::shared_ptr<Object> res;
 		int i = def.size();
 		for(int j = 0;j < i; j++) {
-			def[j]->eval(e);
+			def[j]->eval(env);
 		}
-		return sequence()->eval(e);
+		return sequence()->eval(env);
 	}
 
 };

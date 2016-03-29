@@ -101,7 +101,7 @@ public:
 
 		//std::cout<<b->sequence()->numChildren()<<std::endl;
 	
-		std::shared_ptr<NormalFunction> fun(new NormalFunction(def,b,env));
+		std::shared_ptr<NormalFunction> fun(new NormalFunction(def,b,env,var->getName()));
 
 		env->put(var->getName(),fun);
 		
