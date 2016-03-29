@@ -8,10 +8,10 @@
 #include <lexer.h>
 
 class NumLiteral : public AstLeaf {
-	std::shared_ptr<Number> num;
+	int num;
 public:
 	NumLiteral(Lexer::Token &t)
-	:AstLeaf(t),num(new Number(value())) {
+	:AstLeaf(t),num(value()) {
 	}
 
 	int value() {
@@ -22,8 +22,8 @@ public:
 		std::cout<<"NumLiteral check not impelmented"<<std::endl;
 	}
 
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
-		return num;		
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) {
+		return std::shared_ptr<Object>(new Number(num));		
 	}
 
 };

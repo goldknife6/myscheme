@@ -7,6 +7,7 @@
 #include "sequence.h"
 #include <env.h>
 
+
 class Body : public AstTree {
 	std::deque<AstTree*> def;
 	AstTree *seq;
@@ -53,12 +54,13 @@ public:
 	virtual void check() override {
 		std::cout<<"Body check not impelmented"<<std::endl;
 	}
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) {
 		std::shared_ptr<Object> res;
-		int i = numChildren();
-		for(int j = 0;j < i; j++)
-			res = child(j)->eval(e);
-		return res;
+		int i = def.size();
+		for(int j = 0;j < i; j++) {
+			def[j]->eval(e);
+		}
+		return sequence()->eval(e);
 	}
 
 };

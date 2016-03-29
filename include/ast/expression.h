@@ -31,7 +31,7 @@ public:
 		std::cout<<"Expression check not impelmented"<<std::endl;
 	}
 
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) {
 		return value->eval(e);
 	}
 };

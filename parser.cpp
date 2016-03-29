@@ -192,7 +192,6 @@ AstTree *Parser::definition()
 {
 	std::deque<AstTree*> mydeque;
 	AstTree *p;
-	bool flage = false;
 
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		if (peek(1)->isKey(T::DEFINE)) {
@@ -200,7 +199,6 @@ AstTree *Parser::definition()
 
 			if (peek(0)->isSpecial(T::LEFTPAREN)) {
 				getToken();
-				flage = true;
 				mydeque.push_back(variable());
 
 				mydeque.push_back(defFormals());
@@ -209,19 +207,21 @@ AstTree *Parser::definition()
 					throw *new UnbalancedException;
 
 				mydeque.push_back(body());
+				getToken();
+				if(!token->isSpecial(T::RIGHTPAREN))
+					throw *new UnbalancedException;
+				return new DefinitionVarlist(mydeque);
 				
 			} else {
 				mydeque.push_back(variable());
 				while (p = expression()) {
 					mydeque.push_back(p);
 				}
-				
+				getToken();
+				if(!token->isSpecial(T::RIGHTPAREN))
+					throw *new UnbalancedException;
+				return new DefinitionNormal(mydeque);
 			}
-			getToken();
-			if(!token->isSpecial(T::RIGHTPAREN))
-				throw *new UnbalancedException;
-
-			return new Definition(mydeque,flage);
 		}
 	}
 	

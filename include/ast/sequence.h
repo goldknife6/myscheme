@@ -3,6 +3,7 @@
 
 #include "astlist.h"
 #include "formals.h"
+#include "expression.h"
 #include "env.h"
 
 class Sequence : public AstList {
@@ -11,7 +12,6 @@ public:
 	:AstList(deque) {
 		
 	}
-
 
 	virtual std::string toString() override {
 		std::string s;
@@ -32,7 +32,7 @@ public:
 		std::cout<<"Sequence check not impelmented"<<std::endl;
 	}
 
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) {
 		std::shared_ptr<Object> res;
 		int i = numChildren();
 		for(int j = 0;j < i; j++)

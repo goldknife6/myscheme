@@ -9,10 +9,10 @@
 #include <lexer.h>
 
 class StrLiteral : public AstLeaf {
-	std::shared_ptr<String> str;
+	std::string str;
 public:
 	StrLiteral(Lexer::Token &t)
-	:AstLeaf(t),str(new String(value())) {
+	:AstLeaf(t),str(value()) {
 	}
 
 	std::string value() {
@@ -23,8 +23,8 @@ public:
 		std::cout<<"StrLiteral check not impelmented"<<std::endl;
 	}
 
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
-		return str;		
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) {
+		return std::shared_ptr<Object>(new String(str));		
 	}
 };
 

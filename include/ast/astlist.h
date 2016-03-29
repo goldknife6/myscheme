@@ -18,6 +18,8 @@ public:
 	}
 
 	virtual AstTree *child(int i) override {
+		if(i >= childData.size() || i<0) throw *new OutOfBoundException();
+
 		return childData[i];
 	}
 

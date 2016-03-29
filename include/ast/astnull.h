@@ -23,9 +23,7 @@ public:
 	}
 	virtual void check() override {
 	}
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
-		return nullptr;
-	}
+	
 };
 
 

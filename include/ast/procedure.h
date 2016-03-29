@@ -30,33 +30,36 @@ public:
 		std::cout<<"Procedure check not impelmented"<<std::endl;
 	}
 
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
-		AstTree *fristChild = child(0);
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> env) {
+		Expression *fristChild = dynamic_cast<Expression*>(child(0));
 
-		if (!fristChild) return nullptr;
+		if (!fristChild) 
+			return nullptr;
 
 		try {
-			std::shared_ptr<Object> p = fristChild->eval(e);
+			std::shared_ptr<Object> p = fristChild->eval(env);
 
-			std::shared_ptr<NormalFunction> f = std::dynamic_pointer_cast<NormalFunction>(p);
+			std::shared_ptr<Function> func = std::dynamic_pointer_cast<Function>(p);
 
-			if(!f) throw *new NotAppException(fristChild->toString());
+			if(!func) throw *new NotAppException(fristChild->toString());
 
-			std::shared_ptr<Environment> newEnv = f->makeEnv();
-			DefFormals* def = f->parameters();
-			def->eval(newEnv);
+			std::shared_ptr<Environment> newEnv = func->makeEnv();
+			DefFormals* def = func->parameters();
 
-			Body* b = f->body();
-			return b->eval(newEnv);		
+			if(def->numChildren() != numChildren() - 1)
+				throw *new ArugNotMutchException(this->toString());
+
+			for(int i = 0; i < numChildren() - 1;i++) {
+				def->eval(newEnv,i,child(i+1)->eval(env));
+			}
+
+			return func->body()->eval(newEnv);		
 	
 		} catch (UnboundException &e) {
 			if(fristChild->toString() == "+")
 				e.printMsg();
 		}
 
-
-		
-		
 		return nullptr;
 	}
 };

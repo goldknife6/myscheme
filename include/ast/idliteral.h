@@ -23,7 +23,7 @@ public:
 
 	}
 
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) {
 		std::shared_ptr<Object> obj;
 		obj = e->get(getName());
 

@@ -20,6 +20,7 @@ class Number : public Object {
 public:
 
 	Number(int v = 0): value(v) {
+		//std::cout<<toString()<<" created"<<std::endl;
 	}
 
 	int getValue() {
@@ -29,7 +30,10 @@ public:
 	virtual std::string toString() override {
 		std::ostringstream os;
 		os<<value;
-		return "Number object: "+os.str()+"\n";
+		return "Number object: "+os.str();
+	}
+	virtual ~Number() {
+		//std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 
@@ -46,9 +50,11 @@ public:
 	}
 	
 	virtual std::string toString() override {
-		return "Id object: "+value+"\n";
+		return "Id object: "+value+"";
 	}
-
+	virtual ~Id() {
+		//std::cout<<toString()<<" destoryed"<<std::endl;
+	}
 };
 
 class Bool : public Object {
@@ -65,8 +71,11 @@ public:
 	
 	virtual std::string toString() override {
 		if(value)
-			return "Bool object: true\n";
-		return "Bool object: false\n";
+			return "Bool object: true";
+		return "Bool object: false";
+	}
+	virtual ~Bool() {
+		//std::cout<<toString()<<"destoryed"<<std::endl;
 	}
 };
 
@@ -85,7 +94,10 @@ public:
 	}
 
 	virtual std::string toString() override {
-		return "String object: \""+value+"\"\n";
+		return "String object: \""+value+"\"";
+	}
+	virtual ~String() {
+		//std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 
@@ -108,12 +120,12 @@ public:
 
 class PrimFunction : public Function {
 public:
-	PrimFunction(DefFormals *d,Body *body,std::shared_ptr<Environment> e)
-	:Function(d,body,e) {
+	PrimFunction(DefFormals *def,std::shared_ptr<Environment> env)
+	:Function(def,nullptr,env) {
 	}
 
 	DefFormals* parameters() {
-		return def;
+		throw *new SchemeError("PrimFunction call parameters()\n");
 	}
 
 	Body* body() {
@@ -125,7 +137,10 @@ public:
 	}
 
 	virtual std::string toString() override {
-		return "PrimFunction object\n";
+		return "PrimFunction object";
+	}
+	virtual ~PrimFunction() {
+		//std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 
 };
@@ -149,8 +164,10 @@ public:
 	}
 
 	virtual std::string toString() override {
-		return "NormalFunction object\n";
+		return "NormalFunction object";
 	}
-
+	virtual ~NormalFunction() {
+		//std::cout<<toString()<<" destoryed"<<std::endl;
+	}
 };
 #endif/*_OBJECT_SCHEMER*/

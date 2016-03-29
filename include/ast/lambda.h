@@ -36,7 +36,7 @@ public:
 		std::cout<<"Lambda check not impelmented"<<std::endl;
 	}
 
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) override {
+	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment> e) {
 		std::cout<<"Lambda eval not impelmented"<<std::endl;
 	}
 };

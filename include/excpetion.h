@@ -15,10 +15,20 @@ public:
 	}
 };
 
+
 class UnboundException : public SchemeException {
 public:
 	UnboundException(const std::string &s = "")
 	: SchemeException("\n;Unbound variable: " + s + "\n") {
+	}
+
+};
+
+//;The procedure #[compound-procedure 14 i] has been called with 0 arguments; it requires exactly 1 argument.
+class ArugNotMutchException : public SchemeException {
+public:
+	ArugNotMutchException(const std::string &s = "")
+	: SchemeException("\n;ArugNotMutch: " + s) {
 	}
 
 };
@@ -66,8 +76,21 @@ public:
 
 class SchemeError : public std::logic_error {
 public:
-	SchemeError(const std::string &s = "")
+	SchemeError(const std::string &s ="")
 	: std::logic_error(s) {
+	}
+	virtual void printMsg() {
+		std::cout<< "SchemeError "<<what()<<std::endl;
+	}
+};
+
+class OutOfBoundException : public SchemeError {
+public:
+	OutOfBoundException(const std::string &s ="")
+	: SchemeError(s) {
+	}
+	virtual void printMsg() {
+		std::cout<< "OutOfBoundException "<<what()<<std::endl;
 	}
 };
 #endif/*_EXCEPTION_SCHEMER*/
