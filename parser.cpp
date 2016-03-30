@@ -15,27 +15,25 @@ std::shared_ptr<AstTree> Parser::program()
 }
 
 std::shared_ptr<AstTree> Parser::expression()
-{/*
-	AstTree *t = nullptr;
+{
+	std::shared_ptr<AstTree> t = nullptr;
 
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		if (t = lambdaExpression()) {
-			return new Expression(t);
+			return t;
 		} else if (t = conditional()) { 
-			return new Expression(t);
+			return t;
 		} else if (t = definition()) {
-			return new Expression(t);
+			return t;
 		} else if (t = procedureCall()) {
-			return new Expression(t);		
+			return t;		
 		}
 	} else if (t = literal()) {
-		return new Expression(t);
+		return t;
 	} else if (t = variable()) {
-		return new Expression(t);
-	} else {
-		return nullptr;
-	}*/
-
+		return t;
+	} else 
+		return t;
 }
 
 std::shared_ptr<AstTree> Parser::procedureCall()
@@ -66,30 +64,30 @@ std::shared_ptr<AstTree> Parser::procedureCall()
 }
 
 std::shared_ptr<AstTree> Parser::variable()
-{/*
+{
 	if (peek(0)->isIdentifier()) {
 		getToken();
-		return new IdLiteral(*token);
+		return std::shared_ptr<AstTree>(new Variable(*token));
 	}
-	return nullptr;*/
+	return nullptr;
 }
 
 std::shared_ptr<AstTree> Parser::literal()
-{/*
-	AstTree *p = nullptr;
+{
+	std::shared_ptr<AstTree> p = nullptr;
 
 	if (peek(0)->isNumber()) {
 		getToken();
-		p = new NumLiteral(*token);
+		p = std::shared_ptr<AstTree>(new NumberLiteral(*token));
 	} else if (peek(0)->isString()) {	
 		getToken();
-		p = new StrLiteral(*token);
+		p = std::shared_ptr<AstTree>(new StringLiteral(*token));
 	} else if (peek(0)->isBoolean()) {
 		getToken();
-		p = new BoolLiteral(*token);
+		p = std::shared_ptr<AstTree>(new BooleanLiteral(*token));
 	}
 
-	return p; */
+	return nullptr; 
 }
 
 
@@ -117,6 +115,7 @@ std::shared_ptr<AstTree> Parser::lambdaExpression()
 
 		return new Lambda(mydeque);
 	}*/
+	return nullptr;  
 }
 
 std::shared_ptr<AstTree> Parser::formals()
@@ -141,7 +140,7 @@ std::shared_ptr<AstTree> Parser::formals()
 	}
 	
 
-	return nullptr;*/
+*/	return nullptr;
 }
 
 std::shared_ptr<AstTree> Parser::body()
@@ -151,6 +150,7 @@ std::shared_ptr<AstTree> Parser::body()
 	while(p = definition())
 		mydeque.push_back(p);
 	return new Body(mydeque,sequence());*/
+	return nullptr;
 }
 
 std::shared_ptr<AstTree> Parser::sequence()
@@ -162,6 +162,7 @@ std::shared_ptr<AstTree> Parser::sequence()
 		mydeque.push_back(p);	
 
 	return new Sequence(mydeque);*/
+	return nullptr;
 }
 
 std::shared_ptr<AstTree> Parser::conditional()
@@ -185,13 +186,13 @@ std::shared_ptr<AstTree> Parser::conditional()
 
 		return new Conditional(mydeque);
 	}
-	return nullptr;*/
+*/	return nullptr;
 }
 
 std::shared_ptr<AstTree> Parser::definition()
-{/*
-	std::deque<AstTree*> mydeque;
-	AstTree *p;
+{
+	std::deque<std::shared_ptr<AstTree>> mydeque;
+	std::shared_ptr<AstTree> p;
 
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		if (peek(1)->isKey(T::DEFINE)) {
@@ -210,7 +211,7 @@ std::shared_ptr<AstTree> Parser::definition()
 				getToken();
 				if(!token->isSpecial(T::RIGHTPAREN))
 					throw *new UnbalancedException;
-				return new DefinitionVarlist(mydeque);
+				return std::shared_ptr<AstTree>(new DefinitionVarlist(mydeque));
 				
 			} else {
 				mydeque.push_back(variable());
@@ -220,13 +221,13 @@ std::shared_ptr<AstTree> Parser::definition()
 				getToken();
 				if(!token->isSpecial(T::RIGHTPAREN))
 					throw *new UnbalancedException;
-				return new DefinitionNormal(mydeque);
+				return std::shared_ptr<AstTree>(new DefinitionNormal(mydeque));
 			}
 		}
 	}
 	
 	return nullptr;
-*/
+
 }
 
 
@@ -241,7 +242,7 @@ std::shared_ptr<AstTree> Parser::defFormals()
 	}
 
 	return new DefFormals(mydeque);
-*/
+*/	return nullptr;
 }
 
 
