@@ -4,9 +4,12 @@
 #include "astleaf.h"
 #include "object.h"
 #include "env.h"
+#include "gc.h"
+#include "lexer.h"
 
 #include <string>
-#include <lexer.h>
+
+
 
 class Literal : public AstLeaf {
 public:
@@ -24,8 +27,12 @@ public:
 	:Literal(t) {
 	}
 
+	std::string value() {
+		return token().getText();
+	}
+
 	virtual Object* eval(std::shared_ptr<Environment> env) {
-		
+		return ObjectAlloctaor::allocString(value());
 	}	
 };
 

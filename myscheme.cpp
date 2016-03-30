@@ -3,10 +3,11 @@
 #include <memory>
 
 
-#include <lexer.h>
-#include <parser.h>
-#include <env.h>
-#include <excpetion.h>
+#include "lexer.h"
+#include "parser.h"
+#include "env.h"
+#include "excpetion.h"
+#include "gc.h"
 
 int main(int argc,char *argv[])
 {

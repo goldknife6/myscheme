@@ -4,20 +4,26 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <env.h>
-#include <excpetion.h>
+
+
+#include "env.h"
+#include "excpetion.h"
+
 
 class Object {
+	bool makred;
 public:
-	Object() = default;
+	Object():makred(false) {
+	}
 	virtual std::string toString() =0;
-	
 };
 
 class NumberObject : public Object {
 	int value;	
 public:
 	NumberObject(int v): value(v) {
+	}
+	virtual std::string toString() override {
 	}
 
 };
@@ -34,6 +40,8 @@ class BooleanObject : public Object {
 public:
 	BooleanObject(bool v): value(v) {
 	}
+	virtual std::string toString() override {
+	}
 };
 
 
@@ -41,6 +49,9 @@ class StringObject : public Object {
 	std::string value;	
 public:
 	StringObject(std::string v): value(v) {
+	}
+
+	virtual std::string toString() override {
 	}
 };
 

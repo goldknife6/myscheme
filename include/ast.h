@@ -4,7 +4,6 @@
 #include <ast/literal.h>
 #include <ast/variable.h>
 #include <ast/expression.h>
-#include <ast/numliteral.h>
 #include <ast/procedure.h>
 #include <ast/lambda.h>
 #include <ast/formals.h>

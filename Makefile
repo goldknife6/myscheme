@@ -24,10 +24,14 @@ lexer.o:$(INC)/lexer.h lexer.cpp
 chartype.o:chartype.cpp
 	$(CC) $(CFLAGS) -c chartype.cpp -o $@
 
-$(DEPS):
+parser.d:
+	$(CC) $(CFLAGS)  -ffreestanding -M parser.cpp > $@
+myscheme.d:
 	$(CC) $(CFLAGS)  -ffreestanding -M parser.cpp > $@
 
--include $(DEPS)
+
+-include parser.d
+-include myscheme.d
 
 parser.o:parser.cpp parser.d
 	$(CC) $(CFLAGS) -c $< -o $@
