@@ -5,38 +5,29 @@
 #include <deque>
 class AstList : public AstTree {
 private:
-	std::deque<AstTree*> childData;
+	std::deque<std::shared_ptr<AstTree>> value;
 
 public:
-	AstList(std::deque<AstTree*> &deque)
-	:childData(deque) {
+	AstList(std::deque<std::shared_ptr<AstTree>> &deque)
+	:value(deque) {
 		
 	}
 
 	virtual int numChildren() override {
-		return childData.size();
+		return value.size();
 	}
 
-	virtual AstTree *child(int i) override {
-		if(i >= childData.size() || i<0) throw *new OutOfBoundException();
-
-		return childData[i];
-	}
-
-	virtual std::string location() override {
-		for(AstTree *p : childData) {
-			if(!p->location().empty())
-				return p->location();
-
-			return "";
-		}
+	virtual std::shared_ptr<AstTree> child(int i) override {
+		if(i >= value.size() || i<0) 
+			throw *new OutOfRangeException();
+		return value[i];
 	}
 
 	virtual std::string toString() override {
 		std::string s;
 		s += "(";
 		std::string sep("");
-		for(AstTree *p : childData) {
+		for(std::shared_ptr<AstTree> p : value) {
 			s += sep;
 			s += p->toString();
 			sep = "  ";

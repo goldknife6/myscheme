@@ -18,14 +18,9 @@ public:
 		return 0;
 	}
 
-	virtual AstTree *child(int i) override {
-		//error
-		while(1);	
+	virtual std::shared_ptr<AstTree> child(int i) override {
+		throw *new SchemeError("AstLeaf child() called");
 	};
-
-	virtual std::string location() override {
-		return "at line " + tokenData.getLineNumber();
-	}
 
 	virtual std::string toString() override {
 		return tokenData.getText();

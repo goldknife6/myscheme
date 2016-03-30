@@ -24,7 +24,6 @@ public:
 
 };
 
-//;The procedure #[compound-procedure 14 i] has been called with 0 arguments; it requires exactly 1 argument.
 class ArugNotMutchException : public SchemeException {
 public:
 	ArugNotMutchException(const std::string &s = "")
@@ -45,6 +44,14 @@ class IllegalCharException : public SchemeException {
 public:
 	IllegalCharException(const std::string &s = "")
 	: SchemeException("\n;Illegal character: " + s + "\n") {
+	}
+
+};
+
+class OutOfMemException : public SchemeException {
+public:
+	OutOfMemException(const std::string &s = "")
+	: SchemeException("\n;OutOfMemException: " + s + "\n") {
 	}
 
 };
@@ -84,13 +91,24 @@ public:
 	}
 };
 
-class OutOfBoundException : public SchemeError {
+class OutOfRangeException : public SchemeError {
 public:
-	OutOfBoundException(const std::string &s ="")
+	OutOfRangeException(const std::string &s ="")
 	: SchemeError(s) {
 	}
 	virtual void printMsg() {
-		std::cout<< "OutOfBoundException "<<what()<<std::endl;
+		std::cout<< "OutOfRangeException "<<what()<<std::endl;
+	}
+};
+
+
+class InvalidArgException : public SchemeError {
+public:
+	InvalidArgException(const std::string &s ="")
+	: SchemeError(s) {
+	}
+	virtual void printMsg() {
+		std::cout<< "InvalidArgException "<<what()<<std::endl;
 	}
 };
 #endif/*_EXCEPTION_SCHEMER*/

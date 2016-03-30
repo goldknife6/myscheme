@@ -7,7 +7,7 @@
 class Parser {
 public:
 	Parser(Lexer& l):lexer(l) {};
-	AstTree *beginParse();
+	std::shared_ptr<AstTree> beginParse();
 
 
 private:
@@ -22,18 +22,18 @@ private:
 		return 	&lexer.peek(i);
 	}
 
-	AstTree *program();
-	AstTree *expression();
-	AstTree *definition();
-	AstTree *procedureCall();
-	AstTree *variable();
-	AstTree *literal();
-	AstTree *lambdaExpression();
-	AstTree *formals();
-	AstTree *body();
-	AstTree *sequence();
-	AstTree *conditional();
-	AstTree *defFormals();
+	std::shared_ptr<AstTree> program();
+	std::shared_ptr<AstTree> expression();
+	std::shared_ptr<AstTree> definition();
+	std::shared_ptr<AstTree> procedureCall();
+	std::shared_ptr<AstTree> variable();
+	std::shared_ptr<AstTree> literal();
+	std::shared_ptr<AstTree> lambdaExpression();
+	std::shared_ptr<AstTree> formals();
+	std::shared_ptr<AstTree> body();
+	std::shared_ptr<AstTree> sequence();
+	std::shared_ptr<AstTree> conditional();
+	std::shared_ptr<AstTree> defFormals();
 };
 
 

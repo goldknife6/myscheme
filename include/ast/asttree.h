@@ -10,12 +10,9 @@ class Environment;
 class AstTree {
 public:
 	virtual int numChildren() =0;
-	virtual AstTree *child(int) =0;
-	virtual std::string location() =0;
+	virtual std::shared_ptr<AstTree> child(int) =0;
 	virtual std::string toString() =0;
-	virtual std::shared_ptr<Object> eval(std::shared_ptr<Environment>) =0;
-	virtual void check() =0;
-
+	virtual Object* eval(std::shared_ptr<Environment>) =0;
 };
 
 

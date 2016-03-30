@@ -10,18 +10,12 @@ public:
 		return 0;
 	}
 
-	virtual AstTree *child(int i) override {
+	virtual std::shared_ptr<AstTree> child(int i) override {
 		return nullptr;
-	}
-
-	virtual std::string location() override {
-		return "nulltree";
 	}
 
 	virtual std::string toString() override {
 		return "nulltree";
-	}
-	virtual void check() override {
 	}
 	
 };

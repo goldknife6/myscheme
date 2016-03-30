@@ -30,10 +30,10 @@ int main(int argc,char *argv[])
 	Parser parser(lexer);
 
 
-	std::shared_ptr<Environment> golbalEnv(new Environment(nullptr));
+	std::shared_ptr<Environment> globalEnv(new Environment(nullptr));
 	
 
-	AstTree *tree = nullptr;
+	std::shared_ptr<AstTree> tree = nullptr;
 
 	try {
 		tree = parser.beginParse();
@@ -52,7 +52,7 @@ int main(int argc,char *argv[])
 	while(true) {
 		try {
 			if(tree) {
-				std::shared_ptr<Object> obj = tree->eval(golbalEnv);
+				Object* obj = tree->eval(globalEnv);
 				if(obj) {
 					std::cout<<obj->toString()<<std::endl;
 				}

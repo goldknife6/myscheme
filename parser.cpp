@@ -3,19 +3,19 @@
 
 using T = Lexer::TokenType;
 
-AstTree *Parser::beginParse()
+std::shared_ptr<AstTree> Parser::beginParse()
 {
 	return program();
 }
 
 
-AstTree *Parser::program()
+std::shared_ptr<AstTree> Parser::program()
 {
 	return expression();
 }
 
-AstTree *Parser::expression()
-{
+std::shared_ptr<AstTree> Parser::expression()
+{/*
 	AstTree *t = nullptr;
 
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
@@ -34,12 +34,12 @@ AstTree *Parser::expression()
 		return new Expression(t);
 	} else {
 		return nullptr;
-	}
+	}*/
 
 }
 
-AstTree *Parser::procedureCall()
-{
+std::shared_ptr<AstTree> Parser::procedureCall()
+{/*
 	std::deque<AstTree*> mydeque;
 	AstTree *p;
 
@@ -62,20 +62,20 @@ AstTree *Parser::procedureCall()
 		}
 
 		return new Procedure(mydeque);
-	}
+	}*/
 }
 
-AstTree *Parser::variable()
-{
+std::shared_ptr<AstTree> Parser::variable()
+{/*
 	if (peek(0)->isIdentifier()) {
 		getToken();
 		return new IdLiteral(*token);
 	}
-	return nullptr;
+	return nullptr;*/
 }
 
-AstTree *Parser::literal()
-{
+std::shared_ptr<AstTree> Parser::literal()
+{/*
 	AstTree *p = nullptr;
 
 	if (peek(0)->isNumber()) {
@@ -89,12 +89,12 @@ AstTree *Parser::literal()
 		p = new BoolLiteral(*token);
 	}
 
-	return p; 
+	return p; */
 }
 
 
-AstTree *Parser::lambdaExpression()
-{
+std::shared_ptr<AstTree> Parser::lambdaExpression()
+{/*
 	std::deque<AstTree*> mydeque;
 	Lexer::SpecialToken *tmp;
 	AstTree *p;
@@ -116,11 +116,11 @@ AstTree *Parser::lambdaExpression()
 			throw *new UnbalancedException;
 
 		return new Lambda(mydeque);
-	}
+	}*/
 }
 
-AstTree *Parser::formals()
-{
+std::shared_ptr<AstTree> Parser::formals()
+{/*
 	std::deque<AstTree*> mydeque;
 	bool flage = false;
 	AstTree *p;
@@ -141,31 +141,31 @@ AstTree *Parser::formals()
 	}
 	
 
-	return nullptr;
+	return nullptr;*/
 }
 
-AstTree *Parser::body()
-{
+std::shared_ptr<AstTree> Parser::body()
+{/*
 	AstTree *p;
 	std::deque<AstTree*> mydeque;
 	while(p = definition())
 		mydeque.push_back(p);
-	return new Body(mydeque,sequence());
+	return new Body(mydeque,sequence());*/
 }
 
-AstTree *Parser::sequence()
-{
+std::shared_ptr<AstTree> Parser::sequence()
+{/*
 	AstTree *p;
 	std::deque<AstTree*> mydeque;
 
 	while (p = expression())
 		mydeque.push_back(p);	
 
-	return new Sequence(mydeque);
+	return new Sequence(mydeque);*/
 }
 
-AstTree *Parser::conditional()
-{
+std::shared_ptr<AstTree> Parser::conditional()
+{/*
 	std::deque<AstTree*> mydeque;
 	AstTree*p;
 
@@ -185,11 +185,11 @@ AstTree *Parser::conditional()
 
 		return new Conditional(mydeque);
 	}
-	return nullptr;
+	return nullptr;*/
 }
 
-AstTree *Parser::definition()
-{
+std::shared_ptr<AstTree> Parser::definition()
+{/*
 	std::deque<AstTree*> mydeque;
 	AstTree *p;
 
@@ -226,12 +226,13 @@ AstTree *Parser::definition()
 	}
 	
 	return nullptr;
+*/
 }
 
 
-
-AstTree *Parser::defFormals()
+std::shared_ptr<AstTree> Parser::defFormals()
 {
+/*
 	std::deque<AstTree*> mydeque;
 	AstTree *p = nullptr;
 
@@ -240,6 +241,7 @@ AstTree *Parser::defFormals()
 	}
 
 	return new DefFormals(mydeque);
+*/
 }
 
 
