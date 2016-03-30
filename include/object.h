@@ -4,59 +4,59 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <ast/defformals.h>
-#include <ast/body.h>
 #include <env.h>
 #include <excpetion.h>
 
 class Object {
 public:
+	Object() = default;
 	virtual std::string toString() =0;
 	
 };
 
-class Number : public Object {
-
+class NumberObject : public Object {
 	int value;	
 public:
-
-	Number(int v = 0): value(v) {
+	NumberObject(int v): value(v) {
 	}
 
 };
-
+/*
 class Id : public Object {
-
 	std::string value;	
+public:
+	NumberObject(int v = 0): value(v) {
+	}
+};*/
 
-};
-
-class Bool : public Object {
-
+class BooleanObject : public Object {
 	bool value;	
-
+public:
+	BooleanObject(bool v): value(v) {
+	}
 };
 
 
-class String : public Object {
-
+class StringObject : public Object {
 	std::string value;	
-
+public:
+	StringObject(std::string v): value(v) {
+	}
 };
 
 
-class Function : public Object {
+class FunctionObject : public Object {
 public:
 
 };
 
-class PrimFunction : public Function {
+class PrimFunction : public FunctionObject {
 public:
 	
 
 };
 
-class NormalFunction : public Function {
+class NormalFunction : public FunctionObject {
 	std::string name;
 public:
 	

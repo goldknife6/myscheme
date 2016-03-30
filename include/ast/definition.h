@@ -1,7 +1,7 @@
 #ifndef _DEFINITION_SCHEMER
 #define _DEFINITION_SCHEMER
 
-#include "ast.h"
+#include <ast/defformals.h>
 #include "env.h"
 
 #include <deque>
@@ -43,6 +43,7 @@ public:
 			Object* obj = exp->eval(env);
 			env->put(var->getName(),obj);
 		}
+
 		return nullptr;
 	}
 };
