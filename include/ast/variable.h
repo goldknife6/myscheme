@@ -17,7 +17,7 @@ public:
 		return token().getText();
 	}
 
-	virtual Object* eval(Environment *env) {
+	virtual Object* eval(EnvironmentObject *env) {
 		Object* obj = env->get(getName());
 		if(!obj) 
 			throw *new UnboundException(getName());

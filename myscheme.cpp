@@ -30,9 +30,7 @@ int main(int argc,char *argv[])
 	Parser parser(lexer);
 
 
-	Environment *globalEnv(new Environment(nullptr));
-	
-
+	EnvironmentObject *globalEnv = EnvironmentObject::allocEnv(nullptr);
 	std::shared_ptr<AstTree> tree = nullptr;
 
 	try {
@@ -57,7 +55,8 @@ int main(int argc,char *argv[])
 				}
 			}
 			//std::cout<<tree->toString()<<std::endl;
-
+			GarbageCollection::mark(globalEnv);
+			GarbageCollection::sweep();
 		} catch (UnboundException &e) {
 			e.printMsg();
 		} catch (NotAppException &e) {

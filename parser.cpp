@@ -19,20 +19,22 @@ std::shared_ptr<AstTree> Parser::expression()
 
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		if (t = lambdaExpression()) {
-			return t;
+			
 		} else if (t = conditional()) { 
-			return t;
+			
 		} else if (t = definition()) {
-			return t;
+			
 		} else if (t = procedureCall()) {
-			return t;		
+					
 		}
 	} else if (t = literal()) {
-		return t;
+		
 	} else if (t = variable()) {
-		return t;
+		
 	} else 
 		return t;
+
+	return std::shared_ptr<AstTree>(new Expression(t));
 }
 
 std::shared_ptr<AstTree> Parser::procedureCall()
@@ -86,7 +88,7 @@ std::shared_ptr<AstTree> Parser::literal()
 		p = std::shared_ptr<AstTree>(new BooleanLiteral(*token));
 	}
 
-	return nullptr; 
+	return p; 
 }
 
 

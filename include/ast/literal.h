@@ -3,11 +3,9 @@
 
 #include "astleaf.h"
 #include "object.h"
-#include "gc.h"
 #include "lexer.h"
 
 #include <string>
-
 
 
 class Literal : public AstLeaf {
@@ -16,7 +14,7 @@ public:
 	:AstLeaf(t) {
 	}
 
-	virtual Object* eval(Environment *)=0;	
+	virtual Object* eval(EnvironmentObject *)=0;	
 };
 
 
@@ -30,8 +28,8 @@ public:
 		return token().getText();
 	}
 
-	virtual Object* eval(Environment *env) {
-		return ObjectAlloctaor::allocString(value());
+	virtual Object* eval(EnvironmentObject *env) {
+		return StringObject::allocString(value());
 	}	
 };
 
@@ -43,8 +41,8 @@ public:
 	int value() {
 		return token().getNumber();
 	}
-	virtual Object* eval(Environment *env) {
-		return ObjectAlloctaor::allocNumber(value());
+	virtual Object* eval(EnvironmentObject *env) {
+		return NumberObject::allocNumber(value());
 	}	
 };
 
@@ -56,8 +54,8 @@ public:
 	bool value() {
 		return token().getNumber();
 	}
-	virtual Object* eval(Environment *env) {
-		return ObjectAlloctaor::allocBoolean(value());
+	virtual Object* eval(EnvironmentObject *env) {
+		return BooleanObject::allocBoolean(value());
 	}	
 };
 

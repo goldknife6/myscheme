@@ -5,13 +5,15 @@
 #include <iostream>
 #include <sstream>
 #include <map>
+#include <list>
 
 #include "excpetion.h"
-
 
 class Object {
 	bool marked = false;
 public:
+	static std::list<Object*> objectList;
+
 	virtual std::string toString() =0;
 	bool getMarked() {
 		return 	marked;
@@ -22,17 +24,32 @@ public:
 	void cleanMarked() {
 		marked = false;
 	}
+	static void append(Object* obj) {
+		objectList.push_back(obj);
+	}
+
+	static void release(Object *obj) {
+		delete obj;
+	};
+	virtual ~Object() = default;
 };
 
-class Environment : public Object {
+class EnvironmentObject : public Object {
 	std::map<std::string,Object*> value;
-	Environment* outerEnv;
+	EnvironmentObject* outerEnv;
 public:
-	Environment(Environment *env)
+	EnvironmentObject(EnvironmentObject *env)
 	:outerEnv(env) {
 	}
 
+	static EnvironmentObject* allocEnv(EnvironmentObject *val) {
+		EnvironmentObject* obj = new EnvironmentObject(val);
+		append(obj);
+		return obj;
+	};
+
 	Object* get(std::string name) {
+		throw *new SchemeError("Environment get");
 	}
 
 	auto getIterBegin()->decltype(value.begin()) {
@@ -44,18 +61,22 @@ public:
 	}
 
 	void put(std::string name,Object* obj) {
+		value[name] = obj;
 	}
 
-	Environment *makeEnv() {
-		return new Environment(outerEnv);
+	EnvironmentObject *makeEnv() {
+		return allocEnv(outerEnv);
 	}
 
-	Environment *outer() {
+	EnvironmentObject *outer() {
 		return outerEnv;
 	}
 
 	virtual std::string toString() override {
 		throw *new SchemeError("Environment toString");
+	}
+	virtual ~EnvironmentObject() override {
+		throw *new SchemeError("Environment ~Environment");
 	}
 };
 
@@ -64,7 +85,21 @@ class NumberObject : public Object {
 public:
 	NumberObject(int v): value(v) {
 	}
+
+	static NumberObject* allocNumber(int val) {
+		NumberObject* obj = new NumberObject(val);
+		append(obj);
+		return obj;
+	};
+
 	virtual std::string toString() override {
+		std::ostringstream os;
+		os<<value;
+		return "Number object :"+os.str();
+	}
+
+	virtual ~NumberObject() {
+		std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 /*
@@ -80,7 +115,20 @@ class BooleanObject : public Object {
 public:
 	BooleanObject(bool v): value(v) {
 	}
+
+	static BooleanObject* allocBoolean(bool val) {
+		BooleanObject* obj = new BooleanObject(val);
+		append(obj);
+		return obj;
+	};
+
 	virtual std::string toString() override {
+		if(value)
+			return "Bool object: true";
+		return "Bool object: false";
+	}
+	virtual ~BooleanObject() override {
+		throw *new SchemeError("BooleanObject ~BooleanObject");
 	}
 };
 
@@ -91,20 +139,33 @@ public:
 	StringObject(std::string v): value(v) {
 	}
 
+	static StringObject* allocString(std::string val) {
+		StringObject* obj = new StringObject(val);
+		append(obj);
+		return obj;
+	};
+
 	virtual std::string toString() override {
+		return value;
+	}
+	virtual ~StringObject() override {
+		throw *new SchemeError("StringObject ~StringObject");
 	}
 };
 
 
 class FunctionObject : public Object {
 public:
-	virtual Environment* getEnv()=0;
+	virtual EnvironmentObject* getEnv()=0;
 };
 
 class PrimFunction : public FunctionObject {
 public:
-	
-
+/*
+	virtual ~PrimFunction() override {
+		throw *new PrimFunction("PrimFunction ~PrimFunction");
+	}
+*/
 };
 
 class NormalFunction : public FunctionObject {

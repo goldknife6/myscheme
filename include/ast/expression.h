@@ -15,16 +15,17 @@ public:
 		return 1;
 	}
 
-	virtual std::shared_ptr<AstTree> child(int) override {
-
+	virtual std::shared_ptr<AstTree> child(int i) override {
+		if(i==0) return value;
+		else throw *new OutOfRangeException("Expression");
 	}
 
 	virtual std::string toString() override {
-
+		throw *new SchemeError("Expression toString");
 	}
 
-	virtual Object* eval(Environment *env) override {
-	
+	virtual Object* eval(EnvironmentObject *env) override {
+		return value->eval(env);
 	}
 };
 

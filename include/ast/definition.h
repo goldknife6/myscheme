@@ -28,20 +28,22 @@ public:
 		return std::dynamic_pointer_cast<Variable>(child(0));
 	}
 
-	virtual Object* eval(Environment* env) override {
+	virtual Object* eval(EnvironmentObject* env) override {
 		std::shared_ptr<Variable> var = getVariable();
-		if (!var) 
+		if (!var) {
 			throw *new IllFormedException(this->toString());
-
+		}
 		std::shared_ptr<Expression> exp;
-		if (numChildren() > 2)
+		if (numChildren() > 2) { 
 			throw *new IllFormedException(this->toString());
+		}
 		exp = getExpression();
 		if (exp) {
 			Object* obj = exp->eval(env);
 			env->put(var->getName(),obj);
+		} else {
+			throw *new IllFormedException(this->toString());
 		}
-
 		return nullptr;
 	}
 };
@@ -67,7 +69,7 @@ public:
 		return std::dynamic_pointer_cast<Body>(child(2));
 	}
 
-	virtual Object* eval(Environment *env) override {
+	virtual Object* eval(EnvironmentObject *env) override {
 		std::shared_ptr<Variable> var = getVariable();
 		if (!var) 
 			throw *new IllFormedException(this->toString());
