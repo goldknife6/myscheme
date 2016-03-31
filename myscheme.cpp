@@ -5,7 +5,6 @@
 
 #include "lexer.h"
 #include "parser.h"
-#include "env.h"
 #include "excpetion.h"
 #include "gc.h"
 
@@ -31,7 +30,7 @@ int main(int argc,char *argv[])
 	Parser parser(lexer);
 
 
-	std::shared_ptr<Environment> globalEnv(new Environment(nullptr));
+	Environment *globalEnv(new Environment(nullptr));
 	
 
 	std::shared_ptr<AstTree> tree = nullptr;
@@ -40,7 +39,6 @@ int main(int argc,char *argv[])
 		tree = parser.beginParse();
 	} catch (UnbalancedException &e) {
 		e.printMsg();
-		
 	} catch (EOFException &e) {
 		e.printMsg();
 		return 0;

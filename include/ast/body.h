@@ -5,7 +5,6 @@
 #include "formals.h"
 #include "object.h"
 #include "sequence.h"
-#include <env.h>
 
 
 class Body : public AstTree {

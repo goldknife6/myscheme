@@ -2,7 +2,6 @@
 #define _DEFINITION_SCHEMER
 
 #include <ast/defformals.h>
-#include "env.h"
 
 #include <deque>
 
@@ -13,7 +12,6 @@ public:
 	:AstList(var) {
 	}
 	virtual std::shared_ptr<Variable> getVariable()=0;
-	virtual Object* eval(std::shared_ptr<Environment> env)=0;
 };
 
 class DefinitionNormal : public Definition {
@@ -30,7 +28,7 @@ public:
 		return std::dynamic_pointer_cast<Variable>(child(0));
 	}
 
-	virtual Object* eval(std::shared_ptr<Environment> env) override {
+	virtual Object* eval(Environment* env) override {
 		std::shared_ptr<Variable> var = getVariable();
 		if (!var) 
 			throw *new IllFormedException(this->toString());
@@ -69,7 +67,7 @@ public:
 		return std::dynamic_pointer_cast<Body>(child(2));
 	}
 
-	virtual Object* eval(std::shared_ptr<Environment> env) override {
+	virtual Object* eval(Environment *env) override {
 		std::shared_ptr<Variable> var = getVariable();
 		if (!var) 
 			throw *new IllFormedException(this->toString());

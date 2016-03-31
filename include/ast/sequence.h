@@ -4,7 +4,6 @@
 #include "astlist.h"
 #include "formals.h"
 #include "expression.h"
-#include "env.h"
 
 class Sequence : public AstList {
 public:

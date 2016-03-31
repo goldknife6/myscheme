@@ -12,7 +12,7 @@ public:
 	virtual int numChildren() =0;
 	virtual std::shared_ptr<AstTree> child(int) =0;
 	virtual std::string toString() =0;
-	virtual Object* eval(std::shared_ptr<Environment>) =0;
+	virtual Object* eval(Environment*) =0;
 };
 
 

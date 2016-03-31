@@ -3,7 +3,6 @@
 
 #include "astlist.h"
 #include "object.h"
-#include "env.h"
 
 class Expression : public AstTree {
 	std::shared_ptr<AstTree> value;
@@ -24,7 +23,7 @@ public:
 
 	}
 
-	virtual Object* eval(std::shared_ptr<Environment>) override {
+	virtual Object* eval(Environment *env) override {
 	
 	}
 };

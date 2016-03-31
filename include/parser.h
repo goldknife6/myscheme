@@ -1,8 +1,8 @@
 #ifndef _PARSER_SCHEMER
 #define _PARSER_SCHEMER
 
-#include <lexer.h>
-#include <ast.h>
+#include "lexer.h"
+#include "ast.h"
 
 class Parser {
 public:

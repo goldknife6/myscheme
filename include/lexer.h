@@ -7,7 +7,6 @@
 #include <deque>
 #include <sstream>
 
-#include <token.h>
 
 class Lexer {
 public:

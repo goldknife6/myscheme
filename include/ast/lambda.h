@@ -4,7 +4,6 @@
 #include "astlist.h"
 #include "formals.h"
 #include "object.h"
-#include "env.h"
 
 class Lambda : public AstList {
 public:

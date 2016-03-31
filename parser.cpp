@@ -1,5 +1,4 @@
 #include "parser.h"
-#include "ast.h"
 
 using T = Lexer::TokenType;
 

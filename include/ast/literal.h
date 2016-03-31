@@ -3,7 +3,6 @@
 
 #include "astleaf.h"
 #include "object.h"
-#include "env.h"
 #include "gc.h"
 #include "lexer.h"
 
@@ -17,7 +16,7 @@ public:
 	:AstLeaf(t) {
 	}
 
-	virtual Object* eval(std::shared_ptr<Environment> e)=0;	
+	virtual Object* eval(Environment *)=0;	
 };
 
 
@@ -31,7 +30,7 @@ public:
 		return token().getText();
 	}
 
-	virtual Object* eval(std::shared_ptr<Environment> env) {
+	virtual Object* eval(Environment *env) {
 		return ObjectAlloctaor::allocString(value());
 	}	
 };
@@ -41,8 +40,11 @@ public:
 	NumberLiteral(Lexer::Token &t)
 	:Literal(t) {
 	}
-	virtual Object* eval(std::shared_ptr<Environment> env) {
-		
+	int value() {
+		return token().getNumber();
+	}
+	virtual Object* eval(Environment *env) {
+		return ObjectAlloctaor::allocNumber(value());
 	}	
 };
 
@@ -51,8 +53,11 @@ public:
 	BooleanLiteral(Lexer::Token &t)
 	:Literal(t) {
 	}
-	virtual Object* eval(std::shared_ptr<Environment> env) {
-		
+	bool value() {
+		return token().getNumber();
+	}
+	virtual Object* eval(Environment *env) {
+		return ObjectAlloctaor::allocBoolean(value());
 	}	
 };
 

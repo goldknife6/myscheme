@@ -3,7 +3,6 @@
 
 #include "astleaf.h"
 #include "object.h"
-#include "env.h"
 
 #include <string>
 #include <lexer.h>
@@ -18,7 +17,7 @@ public:
 		return token().getText();
 	}
 
-	virtual Object* eval(std::shared_ptr<Environment> env) {
+	virtual Object* eval(Environment *env) {
 		Object* obj = env->get(getName());
 		if(!obj) 
 			throw *new UnboundException(getName());

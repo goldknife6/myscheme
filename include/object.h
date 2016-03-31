@@ -4,18 +4,59 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <map>
 
-
-#include "env.h"
 #include "excpetion.h"
 
 
 class Object {
-	bool makred;
+	bool marked = false;
 public:
-	Object():makred(false) {
-	}
 	virtual std::string toString() =0;
+	bool getMarked() {
+		return 	marked;
+	}
+	void setMarked() {
+		marked = true;
+	}
+	void cleanMarked() {
+		marked = false;
+	}
+};
+
+class Environment : public Object {
+	std::map<std::string,Object*> value;
+	Environment* outerEnv;
+public:
+	Environment(Environment *env)
+	:outerEnv(env) {
+	}
+
+	Object* get(std::string name) {
+	}
+
+	auto getIterBegin()->decltype(value.begin()) {
+		return value.begin();
+	}
+
+	auto getIterEnd()->decltype(value.end()) {
+		return value.end();
+	}
+
+	void put(std::string name,Object* obj) {
+	}
+
+	Environment *makeEnv() {
+		return new Environment(outerEnv);
+	}
+
+	Environment *outer() {
+		return outerEnv;
+	}
+
+	virtual std::string toString() override {
+		throw *new SchemeError("Environment toString");
+	}
 };
 
 class NumberObject : public Object {
@@ -25,7 +66,6 @@ public:
 	}
 	virtual std::string toString() override {
 	}
-
 };
 /*
 class Id : public Object {
@@ -58,7 +98,7 @@ public:
 
 class FunctionObject : public Object {
 public:
-
+	virtual Environment* getEnv()=0;
 };
 
 class PrimFunction : public FunctionObject {
