@@ -10,37 +10,49 @@ std::shared_ptr<AstTree> Parser::beginParse()
 
 std::shared_ptr<AstTree> Parser::program()
 {
-	return expression();
+	std::shared_ptr<AstTree> t = nullptr;
+	if (t = definition()) {
+			
+	} else if (t = expression()) { 
+			
+	} else {
+		getToken();
+	}
+	return t;
 }
 
 std::shared_ptr<AstTree> Parser::expression()
 {
-	std::shared_ptr<AstTree> t = nullptr;
+	std::shared_ptr<AstTree> t;
 
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 		if (t = lambdaExpression()) {
 			
 		} else if (t = conditional()) { 
 			
-		} else if (t = definition()) {
-			
 		} else if (t = procedureCall()) {
 					
-		}
+		} else 
+			return nullptr;
 	} else if (t = literal()) {
 		
 	} else if (t = variable()) {
 		
-	} else 
-		return t;
-
+	} else {
+		if(peek(0)->isKey()) {
+			getToken();
+			throw *new KeywordException(token->getText());
+		}
+		//getToken();
+		return nullptr;
+	}
 	return std::shared_ptr<AstTree>(new Expression(t));
 }
 
 std::shared_ptr<AstTree> Parser::procedureCall()
-{/*
-	std::deque<AstTree*> mydeque;
-	AstTree *p;
+{
+	std::shared_ptr<AstTree> p;
+	std::deque<std::shared_ptr<AstTree>> mydeque;
 
 	if (peek(0)->isSpecial(T::LEFTPAREN) && 
 		peek(1)->isSpecial(T::RIGHTPAREN)) {
@@ -60,8 +72,8 @@ std::shared_ptr<AstTree> Parser::procedureCall()
 			throw *new UnbalancedException;
 		}
 
-		return new Procedure(mydeque);
-	}*/
+		return std::shared_ptr<AstTree>(new Procedure(mydeque));
+	}
 }
 
 std::shared_ptr<AstTree> Parser::variable()
@@ -145,31 +157,31 @@ std::shared_ptr<AstTree> Parser::formals()
 }
 
 std::shared_ptr<AstTree> Parser::body()
-{/*
-	AstTree *p;
-	std::deque<AstTree*> mydeque;
+{
+	std::shared_ptr<AstTree> p;
+	std::deque<std::shared_ptr<AstTree>> mydeque;
+
 	while(p = definition())
 		mydeque.push_back(p);
-	return new Body(mydeque,sequence());*/
-	return nullptr;
+
+	return std::shared_ptr<AstTree>(new Body(mydeque,sequence()));
 }
 
 std::shared_ptr<AstTree> Parser::sequence()
-{/*
-	AstTree *p;
-	std::deque<AstTree*> mydeque;
+{
+	std::shared_ptr<AstTree> p;
+	std::deque<std::shared_ptr<AstTree>> mydeque;
 
 	while (p = expression())
 		mydeque.push_back(p);	
 
-	return new Sequence(mydeque);*/
-	return nullptr;
+	return std::shared_ptr<AstTree>(new Sequence(mydeque));
 }
 
 std::shared_ptr<AstTree> Parser::conditional()
 {/*
-	std::deque<AstTree*> mydeque;
-	AstTree*p;
+	std::shared_ptr<AstTree> p;
+	std::deque<std::shared_ptr<AstTree>> mydeque;
 
 	if (peek(0)->isSpecial(T::LEFTPAREN)) {
 
@@ -234,16 +246,15 @@ std::shared_ptr<AstTree> Parser::definition()
 
 std::shared_ptr<AstTree> Parser::defFormals()
 {
-/*
-	std::deque<AstTree*> mydeque;
-	AstTree *p = nullptr;
+
+	std::deque<std::shared_ptr<AstTree>> mydeque;
+	std::shared_ptr<AstTree> p = nullptr;
 
 	while (p = variable()) {
 		mydeque.push_back(p);
 	}
 
-	return new DefFormals(mydeque);
-*/	return nullptr;
+	return std::shared_ptr<AstTree>(new DefFormals(mydeque));
 }
 
 

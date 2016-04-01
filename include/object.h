@@ -15,6 +15,9 @@ public:
 	static std::list<Object*> objectList;
 
 	virtual std::string toString() =0;
+	virtual Object *copyObject() =0;
+	virtual ~Object() = default;
+
 	bool getMarked() {
 		return 	marked;
 	}
@@ -31,7 +34,7 @@ public:
 	static void release(Object *obj) {
 		delete obj;
 	};
-	virtual ~Object() = default;
+	
 };
 
 class EnvironmentObject : public Object {
@@ -48,8 +51,20 @@ public:
 		return obj;
 	};
 
+	virtual EnvironmentObject *copyObject() override {
+		EnvironmentObject* tmp = allocEnv(outerEnv);
+		*tmp = *this;
+		return tmp;
+	}
+
 	Object* get(std::string name) {
-		throw *new SchemeError("Environment get");
+		auto it = value.find(name);
+		if(it != value.end()) {
+			return it->second;
+		} else if (outerEnv != nullptr) {
+			return outerEnv->get(name);
+		}
+		return nullptr;
 	}
 
 	auto getIterBegin()->decltype(value.begin()) {
@@ -76,7 +91,7 @@ public:
 		throw *new SchemeError("Environment toString");
 	}
 	virtual ~EnvironmentObject() override {
-		throw *new SchemeError("Environment ~Environment");
+		std::cout<<"Environment ~Environment"<<std::endl;
 	}
 };
 
@@ -92,6 +107,11 @@ public:
 		return obj;
 	};
 
+	virtual NumberObject *copyObject() override {
+		NumberObject* obj = allocNumber(value);
+		return obj;
+	}
+
 	virtual std::string toString() override {
 		std::ostringstream os;
 		os<<value;
@@ -102,13 +122,7 @@ public:
 		std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
-/*
-class Id : public Object {
-	std::string value;	
-public:
-	NumberObject(int v = 0): value(v) {
-	}
-};*/
+
 
 class BooleanObject : public Object {
 	bool value;	
@@ -122,13 +136,18 @@ public:
 		return obj;
 	};
 
+	virtual BooleanObject *copyObject() override {
+		BooleanObject* obj = allocBoolean(value);
+		return obj;
+	}
+
 	virtual std::string toString() override {
 		if(value)
 			return "Bool object: true";
 		return "Bool object: false";
 	}
 	virtual ~BooleanObject() override {
-		throw *new SchemeError("BooleanObject ~BooleanObject");
+		std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 
@@ -145,33 +164,81 @@ public:
 		return obj;
 	};
 
+	virtual StringObject *copyObject() override {
+		return allocString(value);
+	}
+
 	virtual std::string toString() override {
 		return value;
 	}
 	virtual ~StringObject() override {
-		throw *new SchemeError("StringObject ~StringObject");
+		std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 
+class DefFormals;
+class Body;
 
 class FunctionObject : public Object {
 public:
-	virtual EnvironmentObject* getEnv()=0;
+	std::shared_ptr<DefFormals> def;
+	std::shared_ptr<Body> body;
+	EnvironmentObject *env;
+
+	FunctionObject(std::shared_ptr<DefFormals> d,
+		std::shared_ptr<Body> b,
+		EnvironmentObject *e)
+	:def(d),body(b),env(e) {
+	}
+
+	virtual std::shared_ptr<DefFormals> getParameters() {
+		return 	def;
+	}
+	virtual std::shared_ptr<Body> getBody()  {
+		return 	body;
+	}
+	virtual EnvironmentObject *makeEnv()  {
+		return 	EnvironmentObject::allocEnv(env);
+	}
+	virtual EnvironmentObject* getEnv()  {
+		return 	env;
+	}
 };
 
 class PrimFunction : public FunctionObject {
 public:
-/*
 	virtual ~PrimFunction() override {
-		throw *new PrimFunction("PrimFunction ~PrimFunction");
 	}
-*/
 };
 
-class NormalFunction : public FunctionObject {
-	std::string name;
-public:
-	
 
+
+class NormalFunctionObject : public FunctionObject {
+	std::string name;
+public: 
+	NormalFunctionObject(std::shared_ptr<DefFormals> d,
+		std::shared_ptr<Body> b,
+		EnvironmentObject *e)
+	:FunctionObject(d,b,e) {}
+
+	static NormalFunctionObject *allocNormalFunction(std::shared_ptr<DefFormals> d,
+					std::shared_ptr<Body> b,
+					EnvironmentObject *e) {
+		NormalFunctionObject* obj = new NormalFunctionObject(d,b,e);
+		append(obj);
+		return obj;
+	};
+
+	virtual Object *copyObject() override {
+		return allocNormalFunction(def,body,env);
+	}
+
+	virtual std::string toString() override {
+		return "NormalFunctionObject";
+	}
+
+	virtual ~NormalFunctionObject() override {
+		std::cout<<toString()<<" ~NormalFunctionObject"<<std::endl;
+	}
 };
 #endif/*_OBJECT_SCHEMER*/

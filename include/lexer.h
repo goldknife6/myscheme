@@ -11,7 +11,7 @@
 class Lexer {
 public:
 	typedef enum {
-		ENDFILE,ERROR,
+		ENDFILE,ERROR,ANY,
 		IDENTIFIER,BOOLEAN,NUMBER,STRING,
 		/*keyword*/
 		LAMBDA,IF,SET,BEGIN,COND,AND,OR,CASE,LET,DELAY,QUOTE,DEFINE,ELSE,
@@ -105,7 +105,7 @@ public:
 	virtual bool isNumber() =0;
 	virtual bool isString() =0;
 	virtual bool isBoolean() =0;
-	virtual bool isKey(TokenType) =0;
+	virtual bool isKey(TokenType=ANY) =0;
 	virtual bool isSpecial(TokenType) =0;
 	virtual	bool isEOF() =0;
 	virtual	bool isERROR() =0;
@@ -316,6 +316,8 @@ public:
 		return false;
 	}
 	bool isKey(TokenType type) override {
+		if(ANY == type)
+			return true;
 		return type == value;
 	}
 	bool isSpecial(TokenType type) override {

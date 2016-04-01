@@ -75,16 +75,14 @@ public:
 			throw *new IllFormedException(this->toString());
 		std::shared_ptr<DefFormals> def = getDefFormals();
 		std::shared_ptr<Body> b = getBody();
-/*
+
 		if(!b || !b->sequence()->numChildren()) 
 			throw *new IllFormedException(this->toString());
 
-		//std::cout<<b->sequence()->numChildren()<<std::endl;
-	
-		std::shared_ptr<NormalFunction> fun(new NormalFunction(def,b,env,var->getName()));
+		NormalFunctionObject* funobj = NormalFunctionObject::allocNormalFunction(def,b,env);
 
-		env->put(var->getName(),fun);
-*/		
+		env->put(var->getName(),funobj);
+		
 		return nullptr;
 	}
 };

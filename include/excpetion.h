@@ -24,6 +24,15 @@ public:
 
 };
 
+class KeywordException : public SchemeException {
+public:
+	KeywordException(const std::string &s = "")
+	: SchemeException("\n;Syntactic keyword may not be used as an expression" + s + "\n") {
+	}
+
+};
+
+
 class ArugNotMutchException : public SchemeException {
 public:
 	ArugNotMutchException(const std::string &s = "")

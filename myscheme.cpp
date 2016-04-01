@@ -42,6 +42,11 @@ int main(int argc,char *argv[])
 		return 0;
 	} catch(IllFormedException &e) {
 		e.printMsg();
+	} catch (SchemeError &e) {
+		e.printMsg();
+		return 0;
+	} catch (KeywordException &e) {
+		e.printMsg();
 	} catch (...) {
 		std::cerr<<"what exception?1"<<std::endl;
 	}
@@ -69,19 +74,27 @@ int main(int argc,char *argv[])
 			return 0;
 		} catch(IllFormedException &e) {
 			e.printMsg();
-		}  catch (ArugNotMutchException &e) {
+		} catch (ArugNotMutchException &e) {
 			e.printMsg();
-		} /*catch (...) {
-			std::cerr<<"what exception?2"<<std::endl;
-		}*/
+		}  catch (...) {
+			std::cerr<<"what exception?2"<<std::endl;	
+			throw;
+		}
 
 		try {
 			tree = parser.beginParse();
 		} catch (UnbalancedException &e) {
+			tree = nullptr;
 			e.printMsg();
 		} catch (EOFException &e) {
 			e.printMsg();
 			return 0;
+		} catch (SchemeError &e) {
+			e.printMsg();
+			return 0;
+		} catch (KeywordException &e) {
+			tree = nullptr;
+			e.printMsg();
 		} catch (...) {
 			std::cerr<<"what exception?3"<<std::endl;
 		}

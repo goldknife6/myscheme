@@ -21,6 +21,8 @@ public:
 		Object* obj = env->get(getName());
 		if(!obj) 
 			throw *new UnboundException(getName());
+		
+		//return obj->copyObject();
 		return obj;
 	}
 };
