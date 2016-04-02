@@ -8,8 +8,38 @@
 #include "excpetion.h"
 #include "gc.h"
 
+static Object *add(std::shared_ptr<AstTree>* args,EnvironmentObject *env) {
+	int i = 0;
+	int acc = 0;
+	while(args[i]) {
+		NumberObject *obj = dynamic_cast<NumberObject*>(args[i]->eval(env));
+		if(!obj)
+			throw *new SchemeError("add call");
+		acc += obj->getValue();
+		i++;		
+	}
+	delete [] args;
+	return NumberObject::allocNumber(acc);
+}
+
+static Object *less(std::shared_ptr<AstTree>* args,EnvironmentObject *env) {
+	int i = 0;
+	int acc = 0;
+	while(args[i]) {
+		NumberObject *obj = dynamic_cast<NumberObject*>(args[i]->eval(env));
+		if(!obj)
+			throw *new SchemeError("add call");
+		acc += obj->getValue();
+		i++;		
+	}
+	delete [] args;
+	return NumberObject::allocNumber(acc);
+}
+
+
 static void initEnv(EnvironmentObject *globalEnv) {
-	globalEnv->put("+",NativeFunctionObject::allocNativeFunction(globalEnv,NativeFunctionObject::add));
+	globalEnv->put("+",NativeFunctionObject::allocNativeFunction(globalEnv,add));
+	globalEnv->put("<",NativeFunctionObject::allocNativeFunction(globalEnv,less));
 }
 
 
@@ -60,13 +90,15 @@ int main(int argc,char *argv[])
 	
 	while(true) {
 		try {
-			if(tree) {
+			
+			if(tree) {std::cout<<tree->toString()<<std::endl;
 				Object* obj = tree->eval(globalEnv);
 				if(obj) {
 					std::cout<<obj->toString()<<std::endl;
 				}
+				
 			}
-			//std::cout<<tree->toString()<<std::endl;
+			
 			GarbageCollection::mark(globalEnv);
 			GarbageCollection::sweep();
 		} catch (UnboundException &e) {

@@ -41,11 +41,12 @@ public:
 	}
 
 	virtual Object *eval(EnvironmentObject *env) {
-		Object *res;
+		Object *res;	
 		int i = def.size();
 		for(int j = 0;j < i; j++) {
 			def[j]->eval(env);
 		}
+		
 		return sequence()->eval(env);
 	}
 	

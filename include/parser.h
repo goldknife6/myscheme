@@ -34,6 +34,7 @@ private:
 	std::shared_ptr<AstTree> sequence();
 	std::shared_ptr<AstTree> conditional();
 	std::shared_ptr<AstTree> defFormals();
+	std::shared_ptr<AstTree> assignment();
 };
 
 

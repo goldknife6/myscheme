@@ -8,6 +8,8 @@
 #include <list>
 
 #include "excpetion.h"
+#include "ast/asttree.h"
+
 class Procedure;
 
 class Object {
@@ -141,6 +143,10 @@ public:
 		return obj;
 	};
 
+	bool getValue() {
+		return value;
+	}
+
 	virtual BooleanObject *copyObject() override {
 		BooleanObject* obj = allocBoolean(value);
 		return obj;
@@ -210,8 +216,10 @@ public:
 	}
 };
 
+
+
 class NativeFunctionObject : public FunctionObject {
-	typedef Object *(*FuncPointer)(Object**);
+	typedef Object *(*FuncPointer)(std::shared_ptr<AstTree>*,EnvironmentObject*);
 	FuncPointer backcall;
 public:
 	NativeFunctionObject(EnvironmentObject *e,FuncPointer fp)
@@ -223,19 +231,6 @@ public:
 		return obj;
 	};
 
-	static Object *add(Object** args) {
-		int i = 0;
-		int acc = 0;
-		while(args[i]) {
-			NumberObject *obj = dynamic_cast<NumberObject*>(args[i]);
-			if(!obj)
-				throw *new SchemeError("add call");
-			acc += obj->getValue();
-			i++;		
-		}
-		delete [] args;
-		return NumberObject::allocNumber(acc);
-	}
 
 	virtual Object *copyObject() override {
 		throw *new SchemeError("NativeFunctionObject copyObject called");
@@ -249,8 +244,8 @@ public:
 		std::cout<<"~NativeFunctionObject called"<<std::endl;
 	}
 
-	Object *invoke(Object** args) {
-		return backcall(args);	
+	Object *invoke(std::shared_ptr<AstTree>* args,EnvironmentObject *env) {
+		return backcall(args,env);	
 	}
 };
 

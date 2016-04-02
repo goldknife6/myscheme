@@ -212,9 +212,9 @@ public:
 	BooleanToken(int line,std::string s)
 	: Token(line) {
 		if(s == "t")
-			value = 0;
-		else
 			value = 1;
+		else
+			value = 0;
 	}
 
 	bool isIdentifier() {return false;}

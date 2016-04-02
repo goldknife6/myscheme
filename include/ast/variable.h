@@ -7,6 +7,8 @@
 #include <string>
 #include <lexer.h>
 
+
+
 class Variable : public AstLeaf {
 public:	
 	Variable(Lexer::Token &t) 

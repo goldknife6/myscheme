@@ -19,7 +19,7 @@ public:
 		for(int i = 0; (i < numChildren()) && (p = child(i)); i++) {
 			s += sep;
 			s += p->toString();
-			sep = "  ";
+			sep = " ";
 		}
 		s += ")";
 		return s;

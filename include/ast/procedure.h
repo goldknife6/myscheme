@@ -14,12 +14,12 @@ public:
 	virtual std::string toString() override {
 		std::string s;
 		s += "(proc";
-		std::string sep("");
+		std::string sep(" ");
 		std::shared_ptr<AstTree> p;
 		for(int i = 0; (i < numChildren()) && (p = child(i)); i++) {
 			s += sep;
 			s += p->toString();
-			sep = " ";
+			//sep = " ";
 		}
 		s += ")";
 		return s;
@@ -40,13 +40,13 @@ public:
 			if(!func) throw *new NotAppException(fristExp->toString());
 
 			if(typeid(*func) == typeid(NativeFunctionObject)) {
-				Object** args = new Object*[numChildren()];
+				std::shared_ptr<AstTree>* args = new std::shared_ptr<AstTree>[numChildren()];
 				int i;
 				for(i = 0; i < numChildren() - 1;i++) {
-					args[i] = getExp(i+1)->eval(env);
+					args[i] = getExp(i+1);
 				}
 				args[i] = nullptr;
-				return static_cast<NativeFunctionObject*>(func)->invoke(args);
+				return static_cast<NativeFunctionObject*>(func)->invoke(args,env);
 			}
 
 

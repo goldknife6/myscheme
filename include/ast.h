@@ -12,5 +12,6 @@
 #include <ast/conditional.h>
 #include <ast/definition.h>
 #include <ast/defformals.h>
+#include <ast/assignment.h>
 
 #endif/*_AST_SCHEMER*/
