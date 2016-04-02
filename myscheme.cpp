@@ -8,6 +8,12 @@
 #include "excpetion.h"
 #include "gc.h"
 
+static void initEnv(EnvironmentObject *globalEnv) {
+	globalEnv->put("+",NativeFunctionObject::allocNativeFunction(globalEnv,NativeFunctionObject::add));
+}
+
+
+
 int main(int argc,char *argv[])
 {
 	std::ifstream ifs;
@@ -31,6 +37,7 @@ int main(int argc,char *argv[])
 
 
 	EnvironmentObject *globalEnv = EnvironmentObject::allocEnv(nullptr);
+	initEnv(globalEnv);
 	std::shared_ptr<AstTree> tree = nullptr;
 
 	try {

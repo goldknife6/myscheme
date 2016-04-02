@@ -32,8 +32,7 @@ std::shared_ptr<AstTree> Parser::expression()
 			
 		} else if (t = procedureCall()) {
 					
-		} else 
-			return nullptr;
+		}
 	} else if (t = literal()) {
 		
 	} else if (t = variable()) {

@@ -8,6 +8,7 @@
 #include <list>
 
 #include "excpetion.h"
+class Procedure;
 
 class Object {
 	bool marked = false;
@@ -43,6 +44,8 @@ class EnvironmentObject : public Object {
 public:
 	EnvironmentObject(EnvironmentObject *env)
 	:outerEnv(env) {
+		//static Object *add(Object** args)
+		//put("+",NativeFunctionObject::allocNativeFunction(EnvironmentObject *e,FuncPointer fp) );
 	}
 
 	static EnvironmentObject* allocEnv(EnvironmentObject *val) {
@@ -100,7 +103,9 @@ class NumberObject : public Object {
 public:
 	NumberObject(int v): value(v) {
 	}
-
+	int getValue() {
+		return value;	
+	}
 	static NumberObject* allocNumber(int val) {
 		NumberObject* obj = new NumberObject(val);
 		append(obj);
@@ -205,9 +210,47 @@ public:
 	}
 };
 
-class PrimFunction : public FunctionObject {
+class NativeFunctionObject : public FunctionObject {
+	typedef Object *(*FuncPointer)(Object**);
+	FuncPointer backcall;
 public:
-	virtual ~PrimFunction() override {
+	NativeFunctionObject(EnvironmentObject *e,FuncPointer fp)
+	:FunctionObject(nullptr,nullptr,e),backcall(fp) {}
+
+	static NativeFunctionObject *allocNativeFunction(EnvironmentObject *e,FuncPointer fp) {
+		NativeFunctionObject* obj = new NativeFunctionObject(e,fp);
+		append(obj);
+		return obj;
+	};
+
+	static Object *add(Object** args) {
+		int i = 0;
+		int acc = 0;
+		while(args[i]) {
+			NumberObject *obj = dynamic_cast<NumberObject*>(args[i]);
+			if(!obj)
+				throw *new SchemeError("add call");
+			acc += obj->getValue();
+			i++;		
+		}
+		delete [] args;
+		return NumberObject::allocNumber(acc);
+	}
+
+	virtual Object *copyObject() override {
+		throw *new SchemeError("NativeFunctionObject copyObject called");
+	}
+
+	virtual std::string toString() override {
+		return "NativeFunctionObject";
+	}
+
+	virtual ~NativeFunctionObject() override {
+		std::cout<<"~NativeFunctionObject called"<<std::endl;
+	}
+
+	Object *invoke(Object** args) {
+		return backcall(args);	
 	}
 };
 

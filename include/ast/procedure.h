@@ -37,8 +37,18 @@ public:
 			Object *p = fristExp->eval(env);
 
 			FunctionObject  *func = dynamic_cast<FunctionObject*>(p);
-			
 			if(!func) throw *new NotAppException(fristExp->toString());
+
+			if(typeid(*func) == typeid(NativeFunctionObject)) {
+				Object** args = new Object*[numChildren()];
+				int i;
+				for(i = 0; i < numChildren() - 1;i++) {
+					args[i] = getExp(i+1)->eval(env);
+				}
+				args[i] = nullptr;
+				return static_cast<NativeFunctionObject*>(func)->invoke(args);
+			}
+
 
 			EnvironmentObject* newEnv = func->makeEnv();
 			std::shared_ptr<DefFormals> def = func->getParameters();

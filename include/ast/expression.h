@@ -21,11 +21,13 @@ public:
 	}
 
 	virtual std::string toString() override {
-		throw *new SchemeError("Expression toString");
+		return value->toString();
 	}
 
 	virtual Object* eval(EnvironmentObject *env) override {
-		return value->eval(env);
+		if(value)
+			return value->eval(env);
+		return nullptr;
 	}
 };
 
