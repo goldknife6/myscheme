@@ -13,5 +13,7 @@
 #include <ast/definition.h>
 #include <ast/defformals.h>
 #include <ast/assignment.h>
+#include <ast/derivedexpression.h>
+#include <ast/condclause.h>
 
 #endif/*_AST_SCHEMER*/

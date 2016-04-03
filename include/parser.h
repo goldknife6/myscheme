@@ -35,6 +35,8 @@ private:
 	std::shared_ptr<AstTree> conditional();
 	std::shared_ptr<AstTree> defFormals();
 	std::shared_ptr<AstTree> assignment();
+	std::shared_ptr<AstTree> condClause();
+	std::shared_ptr<AstTree> derivedExpression();
 };
 
 

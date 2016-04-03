@@ -77,7 +77,7 @@ public:
 class UnbalancedException : public SchemeException {
 public:
 	UnbalancedException(const std::string &s = "")
-	: SchemeException("\nUnbalanced close parenthesis.\n") {
+	: SchemeException("\nUnbalanced close parenthesis." + s + "\n") {
 	}
 
 };

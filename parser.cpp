@@ -32,7 +32,9 @@ std::shared_ptr<AstTree> Parser::expression()
 			
 		} else if (t = assignment()) { 
 			
-		} else if (t = procedureCall()) {
+		} else if (t = derivedExpression()) {
+					
+		}  else if (t = procedureCall()) {
 					
 		} else {
 			return nullptr;
@@ -284,6 +286,49 @@ std::shared_ptr<AstTree> Parser::defFormals()
 	}
 
 	return std::shared_ptr<AstTree>(new DefFormals(mydeque));
+}
+
+std::shared_ptr<AstTree> Parser::condClause()
+{
+
+	std::deque<std::shared_ptr<AstTree>> mydeque;
+	std::shared_ptr<AstTree> p = nullptr;
+
+	if (!peek(0)->isSpecial(T::LEFTPAREN))
+		return nullptr;
+
+	getToken();
+
+	p = expression();
+	mydeque.push_back(p);
+
+	if(p = sequence())
+		mydeque.push_back(p);
+
+	getToken();
+	if (!token->isSpecial(T::RIGHTPAREN))
+		throw *new UnbalancedException("2");
+
+	return std::shared_ptr<AstTree>(new Condclause(mydeque));
+}
+
+std::shared_ptr<AstTree> Parser::derivedExpression()
+{
+	std::deque<std::shared_ptr<AstTree>> mydeque;
+	std::shared_ptr<AstTree> p;
+	if (peek(0)->isSpecial(T::LEFTPAREN)) {
+		if (peek(1)->isKey(T::COND)) {
+			getToken();getToken();
+			while (p = condClause()) {
+				mydeque.push_back(p);
+			}
+			getToken();
+			if(!token->isSpecial(T::RIGHTPAREN))
+				throw *new UnbalancedException;
+			return std::shared_ptr<AstTree>(new DerivedExpression(mydeque));
+		}
+	}
+	return nullptr;
 }
 
 
