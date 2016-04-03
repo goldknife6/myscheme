@@ -3,4 +3,8 @@
 ;(fun)
 ;(fun)
 
-(cond (#f 1) (#f 1) (#t 1))
+;(define (x y) (cond ((< y 10222) (display y))))
+
+;(define (x) (display 1))
+;(x 222)
+;(display x)

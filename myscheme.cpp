@@ -40,15 +40,15 @@ static Object *less(Procedure* args,EnvironmentObject *env) {
 
 static Object *display(Procedure* args,EnvironmentObject *env) {
 	int num = args->numChildren();
+	Object *obj;
 	for(int i = 1;i < num; i++) {
 		std::shared_ptr<Expression> tmp = args->getExp(i);	
-		Object *obj = tmp->eval(env);
+		obj = tmp->eval(env);
 		if(!obj) {
 			throw *new SchemeError("add call");
 		}
 		std::cout<<obj->toString();
 	}
-	
 	return nullptr;
 }
 
@@ -118,7 +118,7 @@ int main(int argc,char *argv[])
 				
 			}
 			
-			GarbageCollection::clean(globalEnv);
+			//GarbageCollection::clean(globalEnv);
 		} catch (UnboundException &e) {
 			e.printMsg();
 		} catch (NotAppException &e) {

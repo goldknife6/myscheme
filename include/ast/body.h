@@ -27,7 +27,11 @@ public:
 	}
 
 	std::shared_ptr<Sequence> sequence() {
-		return std::dynamic_pointer_cast<Sequence>(seq);
+		std::shared_ptr<Sequence> tmp = std::dynamic_pointer_cast<Sequence>(seq);
+		if(!tmp) {
+			throw *new IllFormedException();
+		}
+		return tmp;
 	}
 
 	virtual std::string toString() override {
@@ -47,8 +51,8 @@ public:
 		for(int j = 0;j < i; j++) {
 			def[j]->eval(env);
 		}
-		
-		return sequence()->eval(env);
+		res = sequence()->eval(env);
+		return res;
 	}
 	
 

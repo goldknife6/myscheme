@@ -30,6 +30,8 @@ public:
 	}
 	
 	virtual Object *eval(EnvironmentObject *env) {
+		
+
 		std::shared_ptr<Expression> fristExp = getExp(0) ;
 		if (!fristExp) 
 			return nullptr;
@@ -40,7 +42,8 @@ public:
 			if(!func) throw *new NotAppException(p->toString());
 
 			if(typeid(*func) == typeid(NativeFunctionObject)) {
-				return static_cast<NativeFunctionObject*>(func)->invoke(this,env);
+				Object *obj = static_cast<NativeFunctionObject*>(func)->invoke(this,env);
+				return obj;
 			}
 
 			EnvironmentObject* newEnv = func->makeEnv();

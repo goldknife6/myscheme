@@ -24,9 +24,14 @@ public:
 	virtual Object *eval(EnvironmentObject *e) {
 		Object *res;
 		int i = numChildren();
-		for(int j = 0;j < i; j++)
+		for(int j = 0;j < i; j++) {
 			res = child(j)->eval(e);
-		return res->copyObject();
+		}
+
+		if(res)
+			return res->copyObject();
+		else
+			return nullptr;
 	}
 };
 
