@@ -28,6 +28,19 @@ public:
 		return std::dynamic_pointer_cast<Variable>(child(0));
 	}
 
+	virtual std::string toString() override {
+		std::string s;
+		s += "(define";
+		std::shared_ptr<AstTree> p;
+		
+		for(int i = 0; (i < numChildren()) && (p = child(i)); i++) {
+			s += " ";
+			s += p->toString();
+		}
+		s += ")";
+		return s;
+	}
+
 	virtual Object* eval(EnvironmentObject* env) override {
 		std::shared_ptr<Variable> var = getVariable();
 		if (!var) {
@@ -61,6 +74,21 @@ public:
 		return std::dynamic_pointer_cast<Variable>(child(0));
 	}
 
+	virtual std::string toString() override {
+		std::string s;
+		s += "(define";
+		std::string sep(" ");
+		std::shared_ptr<AstTree> p;
+		
+		for(int i = 0; (i < numChildren()) && (p = child(i)); i++) {
+			s += sep;
+			s += p->toString();
+			//sep = " ";
+		}
+		s += ")";
+		return s;
+	}
+
 	std::shared_ptr<DefFormals> getDefFormals() {
 		return std::dynamic_pointer_cast<DefFormals>(child(1));
 	}
@@ -74,12 +102,12 @@ public:
 		if (!var) 
 			throw *new IllFormedException(this->toString());
 		std::shared_ptr<DefFormals> def = getDefFormals();
-		std::shared_ptr<Body> b = getBody();
+		std::shared_ptr<Body> body = getBody();
 
-		if(!b || !b->sequence()->numChildren()) 
+		if(!body || !body->sequence()->numChildren()) 
 			throw *new IllFormedException(this->toString());
 
-		NormalFunctionObject* funobj = NormalFunctionObject::allocNormalFunction(def,b,env);
+		NormalFunctionObject* funobj = NormalFunctionObject::allocNormalFunction(def,body,env);
 
 		env->put(var->getName(),funobj);
 		

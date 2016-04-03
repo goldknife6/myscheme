@@ -16,7 +16,7 @@ namespace GarbageCollection {
 			Object *foo = begin->second;
 			if(typeid(*foo) == typeid(EnvironmentObject)) {
 				mark(begin->second);
-			} else if (typeid(*foo) == typeid(FunctionObject)) {
+			} else if (typeid(*foo) == typeid(NormalFunctionObject)) {
 				foo->setMarked();
 				FunctionObject *func = dynamic_cast<FunctionObject*>(foo);
 				mark(func->getEnv());
@@ -39,6 +39,13 @@ namespace GarbageCollection {
 			}
 		}
 
+	}
+	
+	void clean(Object *obj) {
+		if(Object::objectList.size() > 1000) {
+			mark(obj);
+			sweep();
+		}
 	}
 }
 #endif/*_GC_SCHEMER*/

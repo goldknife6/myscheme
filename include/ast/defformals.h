@@ -31,7 +31,7 @@ public:
 	}
 
 	std::shared_ptr<Variable> getVariable(int index) {
-	
+		return std::dynamic_pointer_cast<Variable>(child(index));
 	}
 	void eval(EnvironmentObject *env,int index,Object *obj) {
 		std::shared_ptr<Variable> var = getVariable(index);		

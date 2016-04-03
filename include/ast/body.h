@@ -15,10 +15,15 @@ public:
 	:seq(seq),def(def) {}
 
 	virtual int numChildren() {
-		return 0;
+		return def.size() + 1;
 	}
 	virtual std::shared_ptr<AstTree> child(int i) {
-		return nullptr;
+		if(i < def.size())
+			return def[i];
+		else if (i == def.size())
+			return seq;
+		else
+			throw *new OutOfRangeException("Body");
 	}
 
 	std::shared_ptr<Sequence> sequence() {
@@ -27,16 +32,12 @@ public:
 
 	virtual std::string toString() override {
 		std::string s;
-		s += "(body";
-		std::string sep("");
 		std::shared_ptr<AstTree> p;
 		
 		for(int i = 0; (i < numChildren()) && (p = child(i)); i++) {
-			s += sep;
+			s += " ";
 			s += p->toString();
-			sep = "  ";
 		}
-		s += ")";
 		return s;
 	}
 

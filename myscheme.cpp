@@ -8,38 +8,55 @@
 #include "excpetion.h"
 #include "gc.h"
 
-static Object *add(std::shared_ptr<AstTree>* args,EnvironmentObject *env) {
-	int i = 0;
+static Object *add(Procedure* args,EnvironmentObject *env) {
+	int num = args->numChildren();
 	int acc = 0;
-	while(args[i]) {
-		NumberObject *obj = dynamic_cast<NumberObject*>(args[i]->eval(env));
-		if(!obj)
+	for(int i = 1;i < num; i++) {
+		std::shared_ptr<Expression> tmp = args->getExp(i);	
+		NumberObject *obj = dynamic_cast<NumberObject*>(tmp->eval(env));
+		if(!obj) {
+			std::cout<<i<<std::endl;
 			throw *new SchemeError("add call");
+		}
 		acc += obj->getValue();
-		i++;		
 	}
-	delete [] args;
 	return NumberObject::allocNumber(acc);
 }
 
-static Object *less(std::shared_ptr<AstTree>* args,EnvironmentObject *env) {
-	int i = 0;
-	int acc = 0;
-	while(args[i]) {
-		NumberObject *obj = dynamic_cast<NumberObject*>(args[i]->eval(env));
-		if(!obj)
-			throw *new SchemeError("add call");
-		acc += obj->getValue();
-		i++;		
+static Object *less(Procedure* args,EnvironmentObject *env) {
+	int num = args->numChildren();
+	if(num != 3) {
+		throw *new IllFormedException(args->toString());
 	}
-	delete [] args;
-	return NumberObject::allocNumber(acc);
+	NumberObject *obj1 = dynamic_cast<NumberObject*>(args->getExp(1)->eval(env));
+	NumberObject *obj2 = dynamic_cast<NumberObject*>(args->getExp(2)->eval(env));
+
+	if(!obj1 || !obj2) {
+		throw *new IllFormedException(args->toString());
+	}
+
+	return BooleanObject::allocBoolean(obj1->getValue() < obj2->getValue());
+}
+
+static Object *display(Procedure* args,EnvironmentObject *env) {
+	int num = args->numChildren();
+	for(int i = 1;i < num; i++) {
+		std::shared_ptr<Expression> tmp = args->getExp(i);	
+		Object *obj = tmp->eval(env);
+		if(!obj) {
+			throw *new SchemeError("add call");
+		}
+		std::cout<<obj->toString();
+	}
+	
+	return nullptr;
 }
 
 
 static void initEnv(EnvironmentObject *globalEnv) {
 	globalEnv->put("+",NativeFunctionObject::allocNativeFunction(globalEnv,add));
 	globalEnv->put("<",NativeFunctionObject::allocNativeFunction(globalEnv,less));
+	globalEnv->put("display",NativeFunctionObject::allocNativeFunction(globalEnv,display));
 }
 
 
@@ -91,16 +108,17 @@ int main(int argc,char *argv[])
 	while(true) {
 		try {
 			
-			if(tree) {std::cout<<tree->toString()<<std::endl;
+			if(tree) {
+				//std::cout<<tree->toString()<<std::endl;
 				Object* obj = tree->eval(globalEnv);
+				//std::cout<<tree<<std::endl;
 				if(obj) {
 					std::cout<<obj->toString()<<std::endl;
 				}
 				
 			}
 			
-			GarbageCollection::mark(globalEnv);
-			GarbageCollection::sweep();
+			GarbageCollection::clean(globalEnv);
 		} catch (UnboundException &e) {
 			e.printMsg();
 		} catch (NotAppException &e) {

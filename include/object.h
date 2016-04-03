@@ -71,7 +71,14 @@ public:
 		}
 		return nullptr;
 	}
-
+	EnvironmentObject *where(std::string name) {
+		if(value.find(name) != value.end())
+			return this;
+		else if (outerEnv == nullptr)
+			return nullptr;
+		else
+			return outerEnv->where(name);
+	}
 	auto getIterBegin()->decltype(value.begin()) {
 		return value.begin();
 	}
@@ -96,7 +103,7 @@ public:
 		throw *new SchemeError("Environment toString");
 	}
 	virtual ~EnvironmentObject() override {
-		std::cout<<"Environment ~Environment"<<std::endl;
+		//std::cout<<"~Environment"<<std::endl;
 	}
 };
 
@@ -108,8 +115,9 @@ public:
 	int getValue() {
 		return value;	
 	}
-	static NumberObject* allocNumber(int val) {
-		NumberObject* obj = new NumberObject(val);
+	static NumberObject* allocNumber(int val) {	
+		NumberObject* obj;
+		obj = new NumberObject(val);
 		append(obj);
 		return obj;
 	};
@@ -122,11 +130,11 @@ public:
 	virtual std::string toString() override {
 		std::ostringstream os;
 		os<<value;
-		return "Number object :"+os.str();
+		return "Number object :"+os.str() + "\n";
 	}
 
 	virtual ~NumberObject() {
-		std::cout<<toString()<<" destoryed"<<std::endl;
+		//std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 
@@ -154,11 +162,11 @@ public:
 
 	virtual std::string toString() override {
 		if(value)
-			return "Bool object: true";
-		return "Bool object: false";
+			return "\nBool object: true";
+		return "\nBool object: false";
 	}
 	virtual ~BooleanObject() override {
-		std::cout<<toString()<<" destoryed"<<std::endl;
+		//std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 
@@ -180,10 +188,10 @@ public:
 	}
 
 	virtual std::string toString() override {
-		return value;
+		return value + "\n";
 	}
 	virtual ~StringObject() override {
-		std::cout<<toString()<<" destoryed"<<std::endl;
+		//std::cout<<toString()<<" destoryed"<<std::endl;
 	}
 };
 
@@ -219,14 +227,14 @@ public:
 
 
 class NativeFunctionObject : public FunctionObject {
-	typedef Object *(*FuncPointer)(std::shared_ptr<AstTree>*,EnvironmentObject*);
+	typedef Object *(*FuncPointer)(Procedure*,EnvironmentObject*);
 	FuncPointer backcall;
 public:
-	NativeFunctionObject(EnvironmentObject *e,FuncPointer fp)
-	:FunctionObject(nullptr,nullptr,e),backcall(fp) {}
+	NativeFunctionObject(EnvironmentObject *env,FuncPointer fp)
+	:FunctionObject(nullptr,nullptr,env),backcall(fp) {}
 
-	static NativeFunctionObject *allocNativeFunction(EnvironmentObject *e,FuncPointer fp) {
-		NativeFunctionObject* obj = new NativeFunctionObject(e,fp);
+	static NativeFunctionObject *allocNativeFunction(EnvironmentObject *env,FuncPointer fp) {
+		NativeFunctionObject* obj = new NativeFunctionObject(env,fp);
 		append(obj);
 		return obj;
 	};
@@ -237,14 +245,14 @@ public:
 	}
 
 	virtual std::string toString() override {
-		return "NativeFunctionObject";
+		return "\nNativeFunctionObject";
 	}
 
 	virtual ~NativeFunctionObject() override {
 		std::cout<<"~NativeFunctionObject called"<<std::endl;
 	}
 
-	Object *invoke(std::shared_ptr<AstTree>* args,EnvironmentObject *env) {
+	Object *invoke(Procedure* args,EnvironmentObject *env) {
 		return backcall(args,env);	
 	}
 };
@@ -256,13 +264,13 @@ class NormalFunctionObject : public FunctionObject {
 public: 
 	NormalFunctionObject(std::shared_ptr<DefFormals> d,
 		std::shared_ptr<Body> b,
-		EnvironmentObject *e)
-	:FunctionObject(d,b,e) {}
+		EnvironmentObject *env)
+	:FunctionObject(d,b,env) {}
 
 	static NormalFunctionObject *allocNormalFunction(std::shared_ptr<DefFormals> d,
 					std::shared_ptr<Body> b,
-					EnvironmentObject *e) {
-		NormalFunctionObject* obj = new NormalFunctionObject(d,b,e);
+					EnvironmentObject *env) {
+		NormalFunctionObject* obj = new NormalFunctionObject(d,b,env);
 		append(obj);
 		return obj;
 	};
@@ -272,11 +280,11 @@ public:
 	}
 
 	virtual std::string toString() override {
-		return "NormalFunctionObject";
+		return "\nNormalFunctionObject " + name;
 	}
 
 	virtual ~NormalFunctionObject() override {
-		std::cout<<toString()<<" ~NormalFunctionObject"<<std::endl;
+		std::cout<<name<<" ~NormalFunctionObject"<<std::endl;
 	}
 };
 #endif/*_OBJECT_SCHEMER*/
